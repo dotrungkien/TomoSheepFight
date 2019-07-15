@@ -1,0 +1,423 @@
+fileFormatVersion: 2
+guid: 250ee570ea7c61746868682510e6528b
+timeCreated: 1474038264
+licenseType: Store
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: gray window_0
+    21300002: tover_1
+    21300004: tover_2
+    21300006: tover_3
+    21300008: brown_window_0
+    21300010: roof_0
+    21300012: brown_body
+    21300014: tover_7
+    21300016: roof_2
+    21300018: tover_9
+    21300020: brown_balcony_0
+    21300022: tover_11
+    21300024: roof_1
+    21300026: brown_balcony_1
+    21300028: gray body_1
+    21300030: tover_15
+    21300032: tover_16
+    21300034: balcony_0
+    21300036: balcony1
+    21300038: tover_19
+    21300040: tover_20
+    21300042: tover_21
+    21300044: gray body_0
+    21300046: tover_23
+    21300048: tover_24
+    21300050: tover_25
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: gray window_0
+      rect:
+        serializedVersion: 2
+        x: 949
+        y: 1917
+        width: 396
+        height: 524
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_1
+      rect:
+        serializedVersion: 2
+        x: 1549
+        y: 1971
+        width: 453
+        height: 251
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_2
+      rect:
+        serializedVersion: 2
+        x: 2250
+        y: 2147
+        width: 448
+        height: 248
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_3
+      rect:
+        serializedVersion: 2
+        x: 2948
+        y: 1715
+        width: 519
+        height: 586
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: brown_window_0
+      rect:
+        serializedVersion: 2
+        x: 3694
+        y: 1902
+        width: 330
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: roof_0
+      rect:
+        serializedVersion: 2
+        x: 4335
+        y: 1839
+        width: 761
+        height: 591
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: brown_body
+      rect:
+        serializedVersion: 2
+        x: 5326
+        y: 1801
+        width: 475
+        height: 541
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_7
+      rect:
+        serializedVersion: 2
+        x: 6027
+        y: 2134
+        width: 414
+        height: 217
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: roof_2
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1686
+        width: 669
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_9
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 1094
+        width: 1075
+        height: 597
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: brown_balcony_0
+      rect:
+        serializedVersion: 2
+        x: 2228
+        y: 1163
+        width: 607
+        height: 742
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_11
+      rect:
+        serializedVersion: 2
+        x: 6188
+        y: 1559
+        width: 220
+        height: 500
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: roof_1
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1310
+        width: 665
+        height: 255
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: brown_balcony_1
+      rect:
+        serializedVersion: 2
+        x: 3392
+        y: 980
+        width: 588
+        height: 557
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: gray body_1
+      rect:
+        serializedVersion: 2
+        x: 4754
+        y: 955
+        width: 537
+        height: 666
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_15
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 901
+        width: 439
+        height: 242
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_16
+      rect:
+        serializedVersion: 2
+        x: 2552
+        y: 876
+        width: 519
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: balcony_0
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 209
+        width: 578
+        height: 544
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: balcony1
+      rect:
+        serializedVersion: 2
+        x: 1146
+        y: 163
+        width: 598
+        height: 729
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_19
+      rect:
+        serializedVersion: 2
+        x: 2272
+        y: 354
+        width: 529
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_20
+      rect:
+        serializedVersion: 2
+        x: 3311
+        y: 417
+        width: 417
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_21
+      rect:
+        serializedVersion: 2
+        x: 4288
+        y: 486
+        width: 519
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: gray body_0
+      rect:
+        serializedVersion: 2
+        x: 4962
+        y: 181
+        width: 540
+        height: 613
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_23
+      rect:
+        serializedVersion: 2
+        x: 1835
+        y: 0
+        width: 302
+        height: 357
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_24
+      rect:
+        serializedVersion: 2
+        x: 2845
+        y: 49
+        width: 525
+        height: 217
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: tover_25
+      rect:
+        serializedVersion: 2
+        x: 3911
+        y: 99
+        width: 276
+        height: 173
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
