@@ -19,8 +19,32 @@ public class Sheep : MonoBehaviour
         body.velocity = direction * Vector3.up;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log(string.Format("on collision {0}", other.gameObject.name));
+        if (other.gameObject.tag == "Sheep")
+        {
+            Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
+            body.velocity = weight * direction * Vector3.up;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Finish")
+        {
+            if (direction == 1 && other.transform.position.y > 0) // white up
+            {
+                Debug.Log("Black sheep finished!");
+                GameManager.GetInstance().bScore -= point;
+                EventManager.GetInstance().PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
+            }
+            if (direction == -1 && other.transform.position.y < 0) // white up
+            {
+                Debug.Log("White sheep finished!");
+                GameManager.GetInstance().wScore -= point;
+                EventManager.GetInstance().PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
+            }
+            GameObject.Destroy(gameObject);
+        }
     }
 }
