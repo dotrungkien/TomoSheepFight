@@ -18,9 +18,9 @@ public class Sheep : MonoBehaviour
         isMoving = false;
         isIncubating = true;
         var render = GetComponent<SpriteRenderer>();
-        var newColor = render.color;
-        newColor.a = 0.5f;
-        render.color = newColor;
+        var color = render.color;
+        color.a = 0.5f;
+        render.color = color;
     }
 
     public void BeSpawned()
@@ -29,6 +29,10 @@ public class Sheep : MonoBehaviour
         isMoving = true;
         body = GetComponent<Rigidbody2D>();
         body.velocity = direction * Vector3.up;
+        var render = GetComponent<SpriteRenderer>();
+        var color = render.color;
+        color.a = 0.5f;
+        render.color = color;
     }
 
     void OnCollisionEnter2D(Collision2D other)
