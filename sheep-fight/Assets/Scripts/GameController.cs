@@ -41,14 +41,15 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            PrepareSheep(2, laneIndex);
+            StartCoroutine(PrepareSheep(2, laneIndex));
         }
     }
 
-    void PrepareSheep(int sheepIndex, int laneIndex)
+    public IEnumerator PrepareSheep(int sheepIndex, int laneIndex)
     {
-         = Instantiate(sheepIcons[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
-        GameObject.Destroy(sheep, coolDown);
+        Sheep sheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
+        yield return new WaitForSeconds(coolDown);
+        sheep.BeSpawned();
     }
 
 

@@ -7,6 +7,7 @@ public class Sheep : MonoBehaviour
     public int weight;
     public int point;
     public bool isMoving;
+    public bool isIncubating;
     public int direction = 1;
     public float force = 10f;
 
@@ -14,9 +15,20 @@ public class Sheep : MonoBehaviour
 
     void Start()
     {
-        isMoving = true;
+        isMoving = false;
+        isIncubating = true;
+        var render = GetComponent<SpriteRenderer>();
+        var newColor = render.color;
+        newColor.a = 0.1f;
+        render.color = newColor;
         body = GetComponent<Rigidbody2D>();
         body.velocity = direction * Vector3.up;
+    }
+
+    public void BeSpawned()
+    {
+        isIncubating = false;
+        isMoving = true;
     }
 
     void OnCollisionEnter2D(Collision2D other)
