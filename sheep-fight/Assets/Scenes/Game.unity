@@ -2333,6 +2333,7 @@ MonoBehaviour:
   wScore: {fileID: 899830117}
   bScore: {fileID: 707731679}
   coolDown: {fileID: 570217722}
+  ready: {fileID: 714390041}
   controller: {fileID: 1347100381}
 --- !u!1 &707731677
 GameObject:

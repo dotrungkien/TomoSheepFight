@@ -50,13 +50,11 @@ public class Sheep : MonoBehaviour
         {
             if (direction == 1 && other.transform.position.y > 0) // white up
             {
-                Debug.Log("Black sheep finished!");
                 GameManager.GetInstance().bScore -= point;
                 EventManager.GetInstance().PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
             }
             if (direction == -1 && other.transform.position.y < 0) // white up
             {
-                Debug.Log("White sheep finished!");
                 GameManager.GetInstance().wScore -= point;
                 EventManager.GetInstance().PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
             }

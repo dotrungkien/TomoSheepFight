@@ -58,7 +58,6 @@ public class GameController : MonoBehaviour
         {
             currentSheep.transform.position = wSpawnPositions[laneIndex].position;
         }
-
     }
 
 
