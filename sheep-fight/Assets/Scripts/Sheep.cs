@@ -31,7 +31,7 @@ public class Sheep : MonoBehaviour
         body.velocity = direction * Vector3.up;
         var render = GetComponent<SpriteRenderer>();
         var color = render.color;
-        color.a = 0.5f;
+        color.a = 1f;
         render.color = color;
     }
 
