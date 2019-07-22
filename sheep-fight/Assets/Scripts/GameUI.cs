@@ -7,6 +7,8 @@ public class GameUI : MonoBehaviour, IListener
 {
     public Text wScore;
     public Text bScore;
+    public Text coolDown;
+    public GameController controller;
 
     void Start()
     {
@@ -19,6 +21,11 @@ public class GameUI : MonoBehaviour, IListener
     {
         wScore.text = "" + GameManager.GetInstance().wScore;
         bScore.text = "" + GameManager.GetInstance().bScore;
+    }
+
+    void Update()
+    {
+        coolDown.text = string.Format("{0:0.00}", controller.coolDown);
     }
 
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)

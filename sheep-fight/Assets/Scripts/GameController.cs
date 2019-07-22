@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
     public Transform[] wSpawnPositions;
     public Transform[] bSpawnPositions;
 
-    public float coolDown = 2.0f;
+    public float coolDown = 3.0f;
     public bool isReady = false;
 
     private GameObject sheepIcon;
@@ -37,10 +37,12 @@ public class GameController : MonoBehaviour
     {
         if (isReady)
         {
+            Debug.Log("Spawn Sheep");
             SpawnSheeps(true, 2, laneIndex);
         }
         else
         {
+            Debug.Log("Prepare Sheep!");
             StartCoroutine(PrepareSheep(2, laneIndex));
         }
     }
@@ -50,6 +52,7 @@ public class GameController : MonoBehaviour
         Sheep sheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
         yield return new WaitForSeconds(coolDown);
         sheep.BeSpawned();
+        CoolDownReset();
     }
 
 
@@ -64,6 +67,7 @@ public class GameController : MonoBehaviour
             Sheep sheep = Instantiate<Sheep>(blackSheeps[sheepIndex], bSpawnPositions[laneIndex].position, Quaternion.identity, bSpawnPositions[laneIndex]);
             sheep.direction = -1;
         }
+        CoolDownReset();
     }
 
     public void CoolDownReset()
