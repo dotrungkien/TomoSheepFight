@@ -13,7 +13,11 @@ module.exports = function() {
     let { abi, networks } = json;
     if (!Object.keys(networks).length) return;
     fs.writeFileSync(path.resolve(unityAbis, contract), JSON.stringify(json.abi));
-    // fs.writeFileSync(path.resolve(unityAbis, name + 'Address.txt'), networks['89'].address);
-    fs.writeFileSync(path.resolve(unityAbis, name + 'Address.txt'), networks['4447'].address);
+    // fs.writeFileSync(path.resolve(unityAbis, name + 'Address.txt'), networks['89'].address); // tomo
+    // fs.writeFileSync(path.resolve(unityAbis, name + 'Address.txt'), networks['4447'].address); // truffle develop
+    fs.writeFileSync(
+      path.resolve(unityAbis, name + 'Address.txt'),
+      networks['1563872374179'].address
+    ); // ganache-cli
   });
 };
