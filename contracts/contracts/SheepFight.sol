@@ -1,4 +1,5 @@
 pragma solidity 0.4.24;
+pragma experimental ABIEncoderV2;
 
 contract SheepFight {
     mapping (address => bool) public isPlaying;
@@ -7,7 +8,7 @@ contract SheepFight {
 
     modifier onlyPlaying()
     {
-        require(isPlaying(msg.sender), 'player must be in game');
+        require(isPlaying[msg.sender], 'player must be in game');
         _;
     }
 
@@ -21,7 +22,9 @@ contract SheepFight {
             msg.sender.transfer(msg.value - betValue);
         }
         isPlaying[msg.sender] = false;
-        return keccak256(block.hash + msg.sender);
+        return keccak256(
+            abi.encodePacked(blockhash(block.number - 1), msg.sender)
+        );
     }
 
     function endGame(bool isWon)
