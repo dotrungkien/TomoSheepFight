@@ -8,6 +8,7 @@ using Nethereum.Web3.Accounts;
 using Nethereum.Contracts;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 using Nethereum.Signer;
+using Nethereum.Hex.HexTypes;
 
 public class SheepContract : MonoBehaviour
 {
@@ -39,19 +40,19 @@ public class SheepContract : MonoBehaviour
         string address = contractAddress.ToString();
         var contract = web3.Eth.GetContract(abi, address);
 
-        var checkPlaying = contract.GetFunction("isPlaying");
-        // var playFunction = contract.GetFunction("play");
+        // var checkPlaying = contract.GetFunction("isPlaying");
+        var playFunction = contract.GetFunction("play");
         // var submitFunction = contract.GetFunction("submit");
         var ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         Debug.Log(string.Format("ETH balance {0}", Web3.Convert.FromWei(ethBalance.Value)));
 
-        var isPlaying = await checkPlaying.CallAsync<bool>();
-        Debug.Log(string.Format("Is Playing: {0}", isPlaying));
+        // var isPlaying = await checkPlaying.CallAsync<bool>();
+        // Debug.Log(string.Format("Is Playing: {0}", isPlaying));
 
         // var gas = await playFunction.EstimateGasAsync();
         // Debug.Log("gasssg" + gas.ToString());
-        // var receipt = await playFunction.SendTransactionAndWaitForReceiptAsync(from);
-        // Debug.Log(string.Format("play res: {0}", receipt));
+        var tx = await playFunction.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
+        Debug.Log(string.Format("play res: {0}", tx.ToString()));
 
         // var isPlayingAfter = await checkPlaying.CallAsync<bool>();
         // Debug.Log(string.Format("Is Playing After: {0}", isPlayingAfter));
