@@ -15,11 +15,10 @@ module.exports = {
       gasPrice: 20000000000000,
       gasLimit: 1000000
     }
-  },
-
-  compilers: {
-    solc: {
-      version: '0.4.24'
-    }
   }
+  // compilers: {
+  //   solc: {
+  //     version: '0.5.0'
+  //   }
+  // }
 };

@@ -1,10 +1,15 @@
-pragma solidity 0.4.24;
-pragma experimental ABIEncoderV2;
+pragma solidity 0.5.0;
 
 contract SheepFight {
     mapping (address => bool) public isPlaying;
 
     uint public betValue = 1 ether;
+
+    modifier onlyReady()
+    {
+        require(!isPlaying[msg.sender], 'player must not be in game');
+        _;
+    }
 
     modifier onlyPlaying()
     {
@@ -15,21 +20,18 @@ contract SheepFight {
     function play()
         external
         payable
-        returns (bytes32)
+        onlyReady
     {
         require(msg.value >= betValue, 'must bet 1 value');
         if (msg.value > betValue) {
             msg.sender.transfer(msg.value - betValue);
         }
-        isPlaying[msg.sender] = false;
-        return keccak256(
-            abi.encodePacked(blockhash(block.number - 1), msg.sender)
-        );
+        isPlaying[msg.sender] = true;
     }
 
     function endGame(bool isWon)
         external
-        onlyPlaying()
+        onlyPlaying
     {
         if (isWon) {
             require(address(this).balance >= 2*betValue, 'insufficient balance');
@@ -38,5 +40,5 @@ contract SheepFight {
         isPlaying[msg.sender] = false;
     }
 
-    function () public payable {}
+    function () external payable {}
 }
