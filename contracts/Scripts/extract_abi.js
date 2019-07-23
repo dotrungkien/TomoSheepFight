@@ -3,7 +3,7 @@ const path = require('path');
 const contracts = path.resolve(__dirname, '../build/contracts/');
 const unityAbis = path.resolve(__dirname, '../../Assets/Contracts/');
 
-module.exports = async function(deployer, network, accounts) {
+module.exports = async function() {
   let builtContracts = fs.readdirSync(contracts);
   builtContracts.forEach((contract) => {
     if (contract === 'Migrations.json') return;
