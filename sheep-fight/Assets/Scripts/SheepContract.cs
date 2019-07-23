@@ -1,6 +1,8 @@
 ﻿using System.Numerics;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using UnityEngine;
 
 using Nethereum.Web3;
@@ -18,6 +20,7 @@ public class SheepContract : MonoBehaviour
     // private string from = "0xcbec9a701072198291dd0b78b1163068b8b22dfe";
     private string privateKey = "0x35556b65f2c25c4b2fbc6cb1ce450e959b87d1ea9854dcee934e300757751483"; //ganache-cli acc 0
     private string from = "0x9bf8f7482a041f33f8b976cec6ec82c103faecfd";
+    private Contract contract;
 
     public TextAsset contractABI;
     public TextAsset contractAddress;
@@ -38,75 +41,48 @@ public class SheepContract : MonoBehaviour
     {
         string abi = contractABI.ToString();
         string address = contractAddress.ToString();
-        var contract = web3.Eth.GetContract(abi, address);
+        contract = web3.Eth.GetContract(abi, address);
 
-        // var checkPlaying = contract.GetFunction("isPlaying");
-        var playFunction = contract.GetFunction("play");
-        // var submitFunction = contract.GetFunction("submit");
+
         var ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         Debug.Log(string.Format("ETH balance {0}", Web3.Convert.FromWei(ethBalance.Value)));
-
-        // var isPlaying = await checkPlaying.CallAsync<bool>();
-        // Debug.Log(string.Format("Is Playing: {0}", isPlaying));
-
-        // var gas = await playFunction.EstimateGasAsync();
-        // Debug.Log("gasssg" + gas.ToString());
-        var tx = await playFunction.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
-        Debug.Log(string.Format("play res: {0}", tx.ToString()));
-
-        // var isPlayingAfter = await checkPlaying.CallAsync<bool>();
-        // Debug.Log(string.Format("Is Playing After: {0}", isPlayingAfter));
+        bool isPlaying = await CheckPlaying();
+        Debug.Log(string.Format("Is Playing Before: {0}", isPlaying));
+        if (!isPlaying)
+        {
+            await Play();
+        }
+        else
+        {
+            await EndGame(false);
+        }
+        Debug.Log(string.Format("Is Playing After: {0}", await CheckPlaying()));
     }
-}
 
-public partial class BetValueFunction : BetValueFunctionBase { }
+    async Task<bool> CheckPlaying()
+    {
+        var checkPlaying = contract.GetFunction("isPlaying");
+        var isPlaying = await checkPlaying.CallAsync<bool>(from);
+        return isPlaying;
+    }
 
-[Function("betValue", "uint256")]
-public class BetValueFunctionBase : FunctionMessage
-{
+    async Task<string> Play()
+    {
+        var playFunction = contract.GetFunction("play");
+        var gas = await playFunction.EstimateGasAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
+        Debug.Log("gas " + gas.Value);
+        var tx = await playFunction.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
+        Debug.Log(string.Format("Play tx: {0}", tx));
+        return tx;
+    }
 
-}
-
-public partial class IsPlayingFunction : IsPlayingFunctionBase { }
-
-[Function("isPlaying", "bool")]
-public class IsPlayingFunctionBase : FunctionMessage
-{
-    [Parameter("address", "", 1)]
-    public virtual string ReturnValue1 { get; set; }
-}
-
-public partial class PlayFunction : PlayFunctionBase { }
-
-[Function("play")]
-public class PlayFunctionBase : FunctionMessage
-{
-
-}
-
-public partial class EndGameFunction : EndGameFunctionBase { }
-
-[Function("endGame")]
-public class EndGameFunctionBase : FunctionMessage
-{
-    [Parameter("bool", "isWon", 1)]
-    public virtual bool IsWon { get; set; }
-}
-
-public partial class BetValueOutputDTO : BetValueOutputDTOBase { }
-
-[FunctionOutput]
-public class BetValueOutputDTOBase : IFunctionOutputDTO
-{
-    [Parameter("uint256", "", 1)]
-    public virtual BigInteger ReturnValue1 { get; set; }
-}
-
-public partial class IsPlayingOutputDTO : IsPlayingOutputDTOBase { }
-
-[FunctionOutput]
-public class IsPlayingOutputDTOBase : IFunctionOutputDTO
-{
-    [Parameter("bool", "", 1)]
-    public virtual bool ReturnValue1 { get; set; }
+    async Task<string> EndGame(bool isWon)
+    {
+        var endgameFunction = contract.GetFunction("endGame");
+        var gas = await endgameFunction.EstimateGasAsync(isWon);
+        Debug.Log("gas " + gas.Value);
+        var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null, null, isWon);
+        Debug.Log(string.Format("EndGame tx: {0}", tx));
+        return tx;
+    }
 }
