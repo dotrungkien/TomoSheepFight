@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ using Nethereum.ABI.FunctionEncoding.Attributes;
 using Nethereum.Signer;
 using Nethereum.Hex.HexTypes;
 
-public class SheepContract : MonoBehaviour
+public class SheepContract : MonoBehaviour, IListener
 {
     private Account account;
     private Web3 web3;
@@ -25,6 +26,10 @@ public class SheepContract : MonoBehaviour
     public TextAsset contractABI;
     public TextAsset contractAddress;
 
+    [HideInInspector]
+    public HexBigInteger ethBalance;
+    public BigInteger seed;
+
     void Start()
     {
         var url = "http://localhost:8545";
@@ -34,6 +39,8 @@ public class SheepContract : MonoBehaviour
         account = new Account(privateKey);
         web3 = new Web3(account, url);
         Debug.Log(string.Format("account {0}", account.Address));
+        EventManager.GetInstance().AddListener(EVENT_TYPE.PLAY, this);
+
         GetContract();
     }
 
@@ -43,34 +50,33 @@ public class SheepContract : MonoBehaviour
         string address = contractAddress.ToString();
         contract = web3.Eth.GetContract(abi, address);
 
-
-        var ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
+        ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         Debug.Log(string.Format("ETH balance {0}", Web3.Convert.FromWei(ethBalance.Value)));
         bool isPlaying = await CheckPlaying();
         Debug.Log(string.Format("Is Playing Before: {0}", isPlaying));
-        if (!isPlaying)
-        {
-            await Play();
-        }
-        else
+        // await EndGame(false);
+        // if (!isPlaying)
+        // {
+        //     await Play();
+        // }
+        if (isPlaying)
         {
             await EndGame(false);
         }
         Debug.Log(string.Format("Is Playing After: {0}", await CheckPlaying()));
     }
 
-    async Task<bool> CheckPlaying()
+    public async Task<bool> CheckPlaying()
     {
         var checkPlaying = contract.GetFunction("isPlaying");
         var isPlaying = await checkPlaying.CallAsync<bool>(from);
         return isPlaying;
     }
 
-    async Task<string> Play()
+    public async Task<string> Play()
     {
         var playFunction = contract.GetFunction("play");
-        var gas = await playFunction.EstimateGasAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
-        Debug.Log("gas " + gas.Value);
+        // var gas = await playFunction.EstimateGasAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
         var tx = await playFunction.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
         Debug.Log(string.Format("Play tx: {0}", tx));
         return tx;
@@ -84,5 +90,20 @@ public class SheepContract : MonoBehaviour
         var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null, null, isWon);
         Debug.Log(string.Format("EndGame tx: {0}", tx));
         return tx;
+    }
+
+    public async void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
+    {
+        switch (eventType)
+        {
+            case EVENT_TYPE.PLAY:
+                seed = (new HexBigInteger(await Play())).Value;
+                Debug.Log("seed " + seed.ToString());
+                break;
+            case EVENT_TYPE.BLACK_FINISH:
+                break;
+            default:
+                break;
+        }
     }
 }

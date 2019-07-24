@@ -2334,7 +2334,9 @@ MonoBehaviour:
   bScore: {fileID: 707731679}
   coolDown: {fileID: 570217722}
   ready: {fileID: 714390041}
+  playButton: {fileID: 1108563201}
   controller: {fileID: 1347100381}
+  mainMenu: {fileID: 1406537447}
 --- !u!1 &707731677
 GameObject:
   m_ObjectHideFlags: 0
@@ -4291,7 +4293,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1406537448
 RectTransform:
   m_ObjectHideFlags: 0

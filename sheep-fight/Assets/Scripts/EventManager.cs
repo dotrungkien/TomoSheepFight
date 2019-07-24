@@ -8,6 +8,7 @@ public enum EVENT_TYPE
     SOCKET_READY,
     WHITE_FINISH,
     BLACK_FINISH,
+    PLAY,
     GAMEOVER,
     RESTART,
 }
