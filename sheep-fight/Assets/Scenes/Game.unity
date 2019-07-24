@@ -1029,7 +1029,7 @@ GameObject:
   - component: {fileID: 366248864}
   - component: {fileID: 366248863}
   m_Layer: 5
-  m_Name: Account Value
+  m_Name: Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2346,6 +2346,8 @@ MonoBehaviour:
   bScore: {fileID: 707731679}
   coolDown: {fileID: 570217722}
   ready: {fileID: 714390041}
+  account: {fileID: 366248863}
+  balance: {fileID: 1012723937}
   playButton: {fileID: 1108563201}
   controller: {fileID: 1347100381}
   mainMenu: {fileID: 1406537447}
@@ -3522,6 +3524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contractABI: {fileID: 4900000, guid: 6714f9bfe4f194490a739dc96f4ebd0c, type: 3}
   contractAddress: {fileID: 4900000, guid: 762d9f9f94dcc496a96201c7c9a24f9e, type: 3}
+  gameUI: {fileID: 705987318}
 --- !u!4 &1041407450
 Transform:
   m_ObjectHideFlags: 0
@@ -3739,7 +3742,7 @@ GameObject:
   - component: {fileID: 1242020836}
   - component: {fileID: 1242020835}
   m_Layer: 5
-  m_Name: AddressBG
+  m_Name: Address
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

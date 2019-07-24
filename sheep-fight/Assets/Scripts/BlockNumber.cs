@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using System.Collections;
 using Nethereum.Hex.HexTypes;
 using Nethereum.JsonRpc.UnityClient;
@@ -30,8 +30,8 @@ public class BlockNumber : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(wait);
-            wait = 2;
-            var blockNumberRequest = new EthBlockNumberUnityRequest("http://localhost:8545");
+            // var blockNumberRequest = new EthBlockNumberUnityRequest("http://localhost:8545");
+            var blockNumberRequest = new EthBlockNumberUnityRequest("https://testnet.tomochain.com");
             yield return blockNumberRequest.SendRequest();
             if (blockNumberRequest.Exception == null)
             {
@@ -55,20 +55,16 @@ public class BlockNumber : MonoBehaviour
         }
     }
 
-    /*
-    	public void CheckBlockNumberOnBackgroundThread()
-    	{
-    		Task<HexBigInteger>.Run(async () =>
-    		{
-    			return await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
+    // public void CheckBlockNumberOnBackgroundThread()
+    // {
+    //     Task<HexBigInteger>.Run(async () =>
+    //     {
+    //         return await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
 
-    		}).ContinueWith( blockNumber =>
-    		{
-    			blockNumberText.text = "Block: " + blockNumber.Result.Value.ToString();
-    		},
-    		TaskScheduler.FromCurrentSynchronizationContext());
-    	}
-
-    	*/
-
+    //     }).ContinueWith(blockNumber =>
+    //        {
+    //            blockNumberText.text = "Block: " + blockNumber.Result.Value.ToString();
+    //        },
+    //     TaskScheduler.FromCurrentSynchronizationContext());
+    // }
 }

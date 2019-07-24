@@ -25,6 +25,7 @@ public class SheepContract : MonoBehaviour, IListener
 
     public TextAsset contractABI;
     public TextAsset contractAddress;
+    public GameUI gameUI;
 
     [HideInInspector]
     public HexBigInteger ethBalance;
@@ -32,16 +33,26 @@ public class SheepContract : MonoBehaviour, IListener
 
     void Start()
     {
-        var url = "http://localhost:8545";
-        var ecKey = EthECKey.GenerateKey();
+
         // var privateKey = ecKey.GetPrivateKey();
         // var privateKey = "0xF557B67ED7DA128F0B3920072A041C93FC9FB5BCDEA16F73F03D6BB340C3D34A"; //tomo
+
+        EventManager.GetInstance().AddListener(EVENT_TYPE.PLAY, this);
+        AccountSetup();
+        GetContract();
+    }
+
+    async void AccountSetup()
+    {
+        var url = "http://localhost:8545";
+        var ecKey = EthECKey.GenerateKey();
         account = new Account(privateKey);
         web3 = new Web3(account, url);
         Debug.Log(string.Format("account {0}", account.Address));
-        EventManager.GetInstance().AddListener(EVENT_TYPE.PLAY, this);
-
-        GetContract();
+        ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
+        Debug.Log(string.Format("ETH balance {0}", Web3.Convert.FromWei(ethBalance.Value)));
+        gameUI.SetAccount(account.Address);
+        gameUI.SetBalance(string.Format("{0:0.00} ETH", Web3.Convert.FromWei(ethBalance.Value)));
     }
 
     async void GetContract()
@@ -50,8 +61,6 @@ public class SheepContract : MonoBehaviour, IListener
         string address = contractAddress.ToString();
         contract = web3.Eth.GetContract(abi, address);
 
-        ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
-        Debug.Log(string.Format("ETH balance {0}", Web3.Convert.FromWei(ethBalance.Value)));
         bool isPlaying = await CheckPlaying();
         Debug.Log(string.Format("Is Playing Before: {0}", isPlaying));
         // await EndGame(false);

@@ -12,6 +12,8 @@ public class GameUI : MonoBehaviour, IListener
     public Text bScore;
     public Text coolDown;
     public Text ready;
+    public Text account;
+    public Text balance;
 
     public Button playButton;
     public GameController controller;
@@ -30,6 +32,16 @@ public class GameUI : MonoBehaviour, IListener
     {
         wScore.text = "" + GameManager.GetInstance().wScore;
         bScore.text = "" + GameManager.GetInstance().bScore;
+    }
+
+    public void SetAccount(string address)
+    {
+        account.text = address;
+    }
+
+    public void SetBalance(string balanceText)
+    {
+        balance.text = balanceText;
     }
 
     void Update()
