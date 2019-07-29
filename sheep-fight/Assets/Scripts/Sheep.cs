@@ -17,10 +17,10 @@ public class Sheep : MonoBehaviour
     {
         isMoving = false;
         isIncubating = true;
-        var render = GetComponent<SpriteRenderer>();
-        var color = render.color;
-        color.a = 0.5f;
-        render.color = color;
+        // var render = GetComponent<SpriteRenderer>();
+        // var color = render.color;
+        // color.a = 0.5f;
+        // render.color = color;
     }
 
     public void BeSpawned()
@@ -30,12 +30,12 @@ public class Sheep : MonoBehaviour
         isMoving = true;
         body = GetComponent<Rigidbody2D>();
         body.velocity = direction * Vector3.up;
-        var render = GetComponent<SpriteRenderer>();
-        var color = render.color;
-        color.a = 1f;
-        Debug.Log(color);
-        GetComponent<SpriteRenderer>().color = color;
-        Debug.Log("spawned");
+        // var render = GetComponent<SpriteRenderer>();
+        // var color = render.color;
+        // color.a = 1f;
+        // Debug.Log(color);
+        // GetComponent<SpriteRenderer>().color = color;
+        // Debug.Log("spawned");
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -54,12 +54,12 @@ public class Sheep : MonoBehaviour
             if (direction == 1 && other.transform.position.y > 0) // white up
             {
                 GameManager.GetInstance().bScore -= point;
-                EventManager.GetInstance().PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
+                GameManager.GetInstance().PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
             }
             if (direction == -1 && other.transform.position.y < 0) // white up
             {
                 GameManager.GetInstance().wScore -= point;
-                EventManager.GetInstance().PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
+                GameManager.GetInstance().PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
             }
             GameObject.Destroy(gameObject);
         }

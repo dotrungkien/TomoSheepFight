@@ -13,14 +13,18 @@ public class GameController : MonoBehaviour
     public float coolDown = 0.0f;
     public bool isPlaying = false;
     public bool isReady = false;
+    public Stack sheeps;
 
     private Sheep currentSheep = null;
+    private System.Random rand;
 
-    public void Play()
+
+    public void Play(string tx)
     {
         isPlaying = true;
         isReady = true;
         coolDown = 0f;
+        Debug.Log(string.Format("Play tx: {0}", tx));
     }
 
     private void Update()
@@ -86,5 +90,10 @@ public class GameController : MonoBehaviour
         coolDown = 3.0f;
         isReady = false;
         currentSheep = null;
+    }
+
+    public int NextSheep()
+    {
+        return rand.Next();
     }
 }

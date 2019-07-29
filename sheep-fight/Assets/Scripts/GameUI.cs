@@ -17,13 +17,14 @@ public class GameUI : MonoBehaviour, IListener
 
     public Button playButton;
     public GameController controller;
+    public SheepContract contract;
 
     public GameObject mainMenu;
 
     void Start()
     {
-        EventManager.GetInstance().AddListener(EVENT_TYPE.WHITE_FINISH, this);
-        EventManager.GetInstance().AddListener(EVENT_TYPE.BLACK_FINISH, this);
+        GameManager.GetInstance().AddListener(EVENT_TYPE.WHITE_FINISH, this);
+        GameManager.GetInstance().AddListener(EVENT_TYPE.BLACK_FINISH, this);
         playButton.onClick.AddListener(OnPlay);
         UpdateScore();
     }
@@ -50,11 +51,11 @@ public class GameUI : MonoBehaviour, IListener
         ready.text = "ready: " + controller.isReady;
     }
 
-    public void OnPlay()
+    public async void OnPlay()
     {
         mainMenu.SetActive(false);
-        controller.Play();
-        EventManager.GetInstance().PostNotification(EVENT_TYPE.PLAY);
+        string tx = await contract.Play();
+        controller.Play(tx);
     }
 
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
