@@ -4044,6 +4044,7 @@ MonoBehaviour:
   - {fileID: 179695962}
   - {fileID: 1384046401}
   coolDown: 3
+  isPlaying: 0
   isReady: 0
 --- !u!4 &1347100382
 Transform:

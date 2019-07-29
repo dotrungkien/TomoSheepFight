@@ -17,7 +17,7 @@ module.exports = function() {
     // fs.writeFileSync(path.resolve(unityAbis, name + 'Address.txt'), networks['4447'].address); // truffle develop
     fs.writeFileSync(
       path.resolve(unityAbis, name + 'Address.txt'),
-      networks['1563872374179'].address
+      networks['1564381984169'].address
     ); // ganache-cli
   });
 };

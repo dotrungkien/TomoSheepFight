@@ -53,6 +53,7 @@ public class GameUI : MonoBehaviour, IListener
     public void OnPlay()
     {
         mainMenu.SetActive(false);
+        controller.Play();
         EventManager.GetInstance().PostNotification(EVENT_TYPE.PLAY);
     }
 

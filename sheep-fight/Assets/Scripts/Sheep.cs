@@ -25,6 +25,7 @@ public class Sheep : MonoBehaviour
 
     public void BeSpawned()
     {
+
         isIncubating = false;
         isMoving = true;
         body = GetComponent<Rigidbody2D>();
@@ -32,7 +33,9 @@ public class Sheep : MonoBehaviour
         var render = GetComponent<SpriteRenderer>();
         var color = render.color;
         color.a = 1f;
-        render.color = color;
+        Debug.Log(color);
+        GetComponent<SpriteRenderer>().color = color;
+        Debug.Log("spawned");
     }
 
     void OnCollisionEnter2D(Collision2D other)

@@ -10,24 +10,28 @@ public class GameController : MonoBehaviour
     public Transform[] wSpawnPositions;
     public Transform[] bSpawnPositions;
 
-    public float coolDown = 3.0f;
+    public float coolDown = 0.0f;
+    public bool isPlaying = false;
     public bool isReady = false;
 
     private Sheep currentSheep = null;
 
-    public void StartGame()
+    public void Play()
     {
+        isPlaying = true;
         isReady = true;
+        coolDown = 0f;
     }
 
     private void Update()
     {
+        if (!isPlaying) return;
         if (!isReady)
         {
             coolDown -= Time.deltaTime;
             if (coolDown <= 0f)
             {
-                coolDown = 0;
+                coolDown = 0.0f;
                 isReady = true;
             }
         }

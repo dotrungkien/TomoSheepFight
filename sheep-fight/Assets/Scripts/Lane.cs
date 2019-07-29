@@ -10,6 +10,7 @@ public class Lane : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (!gameController.isPlaying) return;
         var effect = Instantiate(laneEffect, transform.position, Quaternion.identity, transform);
         GameObject.Destroy(effect, 0.15f);
         gameController.SpawnLane(index);

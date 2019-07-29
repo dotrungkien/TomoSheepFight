@@ -19,8 +19,9 @@ public class SheepContract : MonoBehaviour, IListener
     private Web3 web3;
     // private string privateKey = "0xd18a9a98695fd5976df7e5fceb1c25cccba76a89b0ff72015968350faa5bfac5"; //truffle develop acc 0
     // private string from = "0xcbec9a701072198291dd0b78b1163068b8b22dfe";
-    private string privateKey = "0x35556b65f2c25c4b2fbc6cb1ce450e959b87d1ea9854dcee934e300757751483"; //ganache-cli acc 0
-    private string from = "0x9bf8f7482a041f33f8b976cec6ec82c103faecfd";
+    // seed = "exit lens suggest bamboo sniff head sentence focus burger fever prefer benefit";
+    private string privateKey = "0x6e42b17dc5d278edfef336250b0e813f9c61f7fdc8de2ef65f05da1b1014f0b9"; //ganache-cli acc 0
+    private string from = "0x6f759ba46a8a3337e5bd0bb5e615d5107b723249";
     private Contract contract;
 
     public TextAsset contractABI;
