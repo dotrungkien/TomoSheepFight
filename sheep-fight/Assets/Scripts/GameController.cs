@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class GameController : MonoBehaviour
 {
@@ -24,7 +26,14 @@ public class GameController : MonoBehaviour
         isPlaying = true;
         isReady = true;
         coolDown = 0f;
-        Debug.Log(string.Format("Play tx: {0}", tx));
+        var subTx = tx.Substring(0, 8);
+        int seed = Convert.ToInt32(subTx, 16);
+        rand = new System.Random(seed);
+        sheeps = new Stack();
+        for (int i = 0; i < 300; i++)
+        {
+            sheeps.Push(rand.Next() % 5);
+        }
     }
 
     private void Update()

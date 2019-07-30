@@ -96,9 +96,8 @@ public class SheepContract : MonoBehaviour, IListener
     {
         var endgameFunction = contract.GetFunction("endGame");
         var gas = await endgameFunction.EstimateGasAsync(isWon);
-        Debug.Log("gas " + gas.Value);
         var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null, null, isWon);
-        Debug.Log(string.Format("EndGame tx: {0}", tx));
+        // Debug.Log(string.Format("EndGame tx: {0}", tx));
         return tx;
     }
 
