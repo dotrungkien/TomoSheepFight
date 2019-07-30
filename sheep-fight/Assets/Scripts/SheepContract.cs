@@ -63,7 +63,7 @@ public class SheepContract : MonoBehaviour, IListener
         contract = web3.Eth.GetContract(abi, address);
 
         bool isPlaying = await CheckPlaying();
-        Debug.Log(string.Format("Is Playing Before: {0}", isPlaying));
+        // Debug.Log(string.Format("Is Playing Before: {0}", isPlaying));
         // await EndGame(false);
         // if (!isPlaying)
         // {
@@ -73,7 +73,7 @@ public class SheepContract : MonoBehaviour, IListener
         {
             await EndGame(false);
         }
-        Debug.Log(string.Format("Is Playing After: {0}", await CheckPlaying()));
+        // Debug.Log(string.Format("Is Playing After: {0}", await CheckPlaying()));
     }
 
     public async Task<bool> CheckPlaying()
