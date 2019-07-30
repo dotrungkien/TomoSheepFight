@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 
@@ -15,11 +17,28 @@ public class GameController : MonoBehaviour
     public float coolDown = 0.0f;
     public bool isPlaying = false;
     public bool isReady = false;
-    public Stack sheeps;
+
+    [HideInInspector]
+    public List<int> sheeps;
+    public SheepIcon[] icons;
 
     private Sheep currentSheep = null;
     private System.Random rand;
 
+    public void UpdateIcons()
+    {
+        for (int i = 0; i < icons.Length; i++)
+        {
+            icons[i].SwitchSheep(sheeps[i]);
+        }
+    }
+
+    public void NextTurn()
+    {
+        sheeps.RemoveAt(0);
+        UpdateIcons();
+        ResetCooldown();
+    }
 
     public void Play(string tx)
     {
@@ -29,11 +48,18 @@ public class GameController : MonoBehaviour
         var subTx = tx.Substring(0, 8);
         int seed = Convert.ToInt32(subTx, 16);
         rand = new System.Random(seed);
-        sheeps = new Stack();
-        for (int i = 0; i < 300; i++)
+        sheeps = new List<int>();
+        for (int i = 0; i < 30; i++)
         {
-            sheeps.Push(rand.Next() % 5);
+            sheeps.Add(rand.Next() % 5);
         }
+        UpdateIcons();
+        // Debug.Log(string.Format("First 5 sheeps: {0}", string.Join(", ", sheeps.Take(5))));
+    }
+
+    public void AddNewSheep()
+    {
+        sheeps.Add(rand.Next() % 5);
     }
 
     private void Update()
@@ -46,6 +72,7 @@ public class GameController : MonoBehaviour
             {
                 coolDown = 0.0f;
                 isReady = true;
+                // AddNewSheep();
             }
         }
     }
@@ -54,11 +81,12 @@ public class GameController : MonoBehaviour
     {
         if (isReady)
         {
-            SpawnSheeps(true, 2, laneIndex);
+            SpawnSheeps(true, sheeps[0], laneIndex);
+            NextTurn();
         }
         else
         {
-            StartCoroutine(PrepareSheep(2, laneIndex));
+            StartCoroutine(PrepareSheep(sheeps[0], laneIndex));
         }
     }
 
@@ -69,7 +97,7 @@ public class GameController : MonoBehaviour
             currentSheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             yield return new WaitForSeconds(coolDown);
             currentSheep.BeSpawned();
-            ResetCooldown();
+            NextTurn();
         }
         else
         {
@@ -91,7 +119,7 @@ public class GameController : MonoBehaviour
             sheep.BeSpawned();
             sheep.direction = -1;
         }
-        ResetCooldown();
+
     }
 
     public void ResetCooldown()
@@ -99,10 +127,5 @@ public class GameController : MonoBehaviour
         coolDown = 3.0f;
         isReady = false;
         currentSheep = null;
-    }
-
-    public int NextSheep()
-    {
-        return rand.Next();
     }
 }
