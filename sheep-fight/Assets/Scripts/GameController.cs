@@ -10,7 +10,6 @@ public class GameController : MonoBehaviour
 {
     public Sheep[] whiteSheeps;
     public Sheep[] blackSheeps;
-    public GameObject[] sheepIcons;
     public Transform[] wSpawnPositions;
     public Transform[] bSpawnPositions;
 

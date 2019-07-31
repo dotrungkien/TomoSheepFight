@@ -4,15 +4,19 @@ using UnityEngine.UI;
 public class RadialProgress : MonoBehaviour
 {
     public Image LoadingBar;
-    float currentValue;
-    public float speed;
+    private float currentValue;
 
     void Update()
     {
-        if (currentValue < 100)
+        if (currentValue < 3f)
         {
-            currentValue += speed * Time.deltaTime;
+            currentValue += Time.deltaTime;
         }
-        LoadingBar.fillAmount = currentValue / 100;
+        LoadingBar.fillAmount = currentValue / 3f;
+    }
+
+    public void ResetCooldown()
+    {
+        currentValue = 0f;
     }
 }
