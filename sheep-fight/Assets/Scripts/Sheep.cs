@@ -9,7 +9,6 @@ public class Sheep : MonoBehaviour
     public bool isMoving;
     public bool isIncubating;
     public int direction = 1;
-    public float force = 10f;
     public GameObject pushEffect;
 
     private Rigidbody2D body;
@@ -33,7 +32,7 @@ public class Sheep : MonoBehaviour
         isIncubating = false;
         isMoving = true;
         body = GetComponent<Rigidbody2D>();
-        body.velocity = direction * Vector3.up;
+        body.velocity = direction * Vector3.up / 2f;
         // var render = GetComponent<SpriteRenderer>();
         // var color = render.color;
         // color.a = 1f;
@@ -48,7 +47,6 @@ public class Sheep : MonoBehaviour
         {
             GetComponent<Animator>().SetTrigger("push");
             Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
-            body.velocity = weight * direction * Vector3.up;
             if (direction == 1)
             {
                 Vector3 pushEffectPos = transform.position + Vector3.up * GetComponent<BoxCollider2D>().size.y / 2f;

@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
     public List<int> sheeps;
     public SheepIcon[] icons;
 
+
     private Sheep currentSheep = null;
     private System.Random rand;
 
@@ -29,6 +30,16 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < icons.Length; i++)
         {
             icons[i].SwitchSheep(sheeps[i]);
+        }
+    }
+
+    IEnumerator MockBlackSheepSpawn()
+    {
+        System.Random mockRand = new System.Random();
+        while (true)
+        {
+            SpawnSheeps(false, mockRand.Next() % 5, mockRand.Next() % 5);
+            yield return new WaitForSeconds(3f);
         }
     }
 
@@ -42,6 +53,7 @@ public class GameController : MonoBehaviour
     public void Play(string tx)
     {
         isPlaying = true;
+        StartCoroutine(MockBlackSheepSpawn());
         isReady = true;
         coolDown = 0f;
         var subTx = tx.Substring(0, 8);
@@ -78,15 +90,15 @@ public class GameController : MonoBehaviour
 
     public void SpawnLane(int laneIndex)
     {
-        if (isReady)
-        {
-            SpawnSheeps(true, sheeps[0], laneIndex);
-            NextTurn();
-        }
-        else
-        {
-            StartCoroutine(PrepareSheep(sheeps[0], laneIndex));
-        }
+        // if (isReady)
+        // {
+        //     SpawnSheeps(true, sheeps[0], laneIndex);
+        //     NextTurn();
+        // }
+        // else
+        // {
+        StartCoroutine(PrepareSheep(sheeps[0], laneIndex));
+        // }
     }
 
     public IEnumerator PrepareSheep(int sheepIndex, int laneIndex)

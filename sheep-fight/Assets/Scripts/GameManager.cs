@@ -26,9 +26,6 @@ public class GameManager : Singleton<GameManager>
     public int wScore;
     public int bScore;
 
-    public Queue<int> whiteSheeps;
-    public Queue<int> blackSheeps;
-
     private Dictionary<EVENT_TYPE, List<IListener>> listeners = new Dictionary<EVENT_TYPE, List<IListener>>();
 
     public void AddListener(EVENT_TYPE eventType, IListener listener)
