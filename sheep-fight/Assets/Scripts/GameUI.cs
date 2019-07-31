@@ -10,8 +10,6 @@ public class GameUI : MonoBehaviour, IListener
 {
     public Text wScore;
     public Text bScore;
-    public Text coolDown;
-    public Text ready;
     public Text account;
     public Text balance;
 
@@ -43,12 +41,6 @@ public class GameUI : MonoBehaviour, IListener
     public void SetBalance(string balanceText)
     {
         balance.text = balanceText;
-    }
-
-    void Update()
-    {
-        coolDown.text = string.Format("{0:0.00}", controller.coolDown);
-        ready.text = "ready: " + controller.isReady;
     }
 
     public async void OnPlay()

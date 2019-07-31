@@ -13,11 +13,17 @@ public class SheepIcon : MonoBehaviour
     [HideInInspector]
     public float cooldown = 3f;
     private float progress = 3f;
+    private bool firstTime = true;
 
     public void SwitchSheep(int idx)
     {
         if (idx < 0 || idx >= sheeps.Length) return;
         icon.sprite = sheeps[idx];
+        if (firstTime)
+        {
+            firstTime = false;
+            return;
+        }
         ResetCooldown();
     }
 
