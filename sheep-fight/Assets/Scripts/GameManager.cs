@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public enum EVENT_TYPE
 {
+    ACCOUNT_READY,
     SOCKET_READY,
     WHITE_FINISH,
     BLACK_FINISH,

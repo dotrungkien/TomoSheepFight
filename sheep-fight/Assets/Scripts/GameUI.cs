@@ -21,6 +21,7 @@ public class GameUI : MonoBehaviour, IListener
 
     void Start()
     {
+        GameManager.GetInstance().AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.GetInstance().AddListener(EVENT_TYPE.WHITE_FINISH, this);
         GameManager.GetInstance().AddListener(EVENT_TYPE.BLACK_FINISH, this);
         playButton.onClick.AddListener(OnPlay);
@@ -54,6 +55,8 @@ public class GameUI : MonoBehaviour, IListener
     {
         switch (eventType)
         {
+            case EVENT_TYPE.ACCOUNT_READY:
+                break;
             case EVENT_TYPE.WHITE_FINISH:
                 UpdateScore();
                 break;
