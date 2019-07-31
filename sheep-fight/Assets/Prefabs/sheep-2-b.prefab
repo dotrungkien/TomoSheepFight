@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1172608671}
   m_Layer: 0
   m_Name: sheep-2-b
-  m_TagString: Untagged
+  m_TagString: Sheep
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 99bf93bbeb05748bba05d72ef9f72543, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -114,12 +114,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec3b04a510bb84669a386003908e0047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 0
-  point: 0
+  weight: 20
+  point: 5
   isMoving: 0
   isIncubating: 0
   direction: -1
   force: 10
+  pushEffect: {fileID: 1682183557618066311, guid: 017666818cf8d48038e4fac611656d37,
+    type: 3}
 --- !u!61 &1172608672
 BoxCollider2D:
   m_ObjectHideFlags: 0
