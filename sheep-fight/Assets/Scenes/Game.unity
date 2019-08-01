@@ -3374,7 +3374,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2a8dbdf99112846ab9f03d338b2d5917, type: 3}
   icon: {fileID: 323419343}
   isActive: 1
-  cooldown: 3
+  cooldown: 5
 --- !u!1 &1010007101
 GameObject:
   m_ObjectHideFlags: 0
@@ -4331,7 +4331,7 @@ MonoBehaviour:
   - {fileID: 1157364851}
   - {fileID: 179695962}
   - {fileID: 1384046401}
-  coolDown: 3
+  coolDown: 5
   isPlaying: 0
   isReady: 0
   sheeps: 

@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour
         while (true)
         {
             SpawnSheeps(false, mockRand.Next() % 5, mockRand.Next() % 5);
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(5f);
         }
     }
 
@@ -105,6 +105,7 @@ public class GameController : MonoBehaviour
     {
         if (currentSheep == null)
         {
+            Debug.Log("spawng and wait");
             currentSheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             yield return new WaitForSeconds(coolDown);
             currentSheep.BeSpawned();
@@ -135,7 +136,7 @@ public class GameController : MonoBehaviour
 
     public void ResetCooldown()
     {
-        coolDown = 3.0f;
+        coolDown = 5.0f;
         isReady = false;
         currentSheep = null;
     }

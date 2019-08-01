@@ -17,13 +17,14 @@ public class Sheep : MonoBehaviour
     {
         isMoving = false;
         isIncubating = true;
-        BeSpawned();
 
-
-        // var render = GetComponent<SpriteRenderer>();
-        // var color = render.color;
-        // color.a = 0.5f;
-        // render.color = color;
+        var render = GetComponent<SpriteRenderer>();
+        if (direction == 1)
+        {
+            var color = render.color;
+            color.a = 0.5f;
+            render.color = color;
+        }
     }
 
     public void BeSpawned()
@@ -33,12 +34,10 @@ public class Sheep : MonoBehaviour
         isMoving = true;
         body = GetComponent<Rigidbody2D>();
         body.velocity = direction * Vector3.up / 2f;
-        // var render = GetComponent<SpriteRenderer>();
-        // var color = render.color;
-        // color.a = 1f;
-        // Debug.Log(color);
-        // GetComponent<SpriteRenderer>().color = color;
-        // Debug.Log("spawned");
+        var render = GetComponent<SpriteRenderer>();
+        var color = render.color;
+        color.a = 1f;
+        render.color = color;
     }
 
     void OnCollisionEnter2D(Collision2D other)

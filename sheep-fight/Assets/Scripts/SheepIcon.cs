@@ -10,9 +10,8 @@ public class SheepIcon : MonoBehaviour
     public Image icon;
     public bool isActive = false;
 
-    [HideInInspector]
-    public float cooldown = 3f;
-    private float progress = 3f;
+    public float cooldown = 5f;
+    private float progress = 5f;
     private bool firstTime = true;
 
     public void SwitchSheep(int idx)
