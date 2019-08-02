@@ -49,16 +49,16 @@ public class Sheep : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        collisionCount += 1;
-        // if (collisionCount > 1) return;
-        // Debug.Log(string.Format("collider collisionCount = {0}", collisionCount));
         if (other.gameObject.tag != "Sheep") return;
+        collisionCount += 1;
+        if (collisionCount > 2) return;
+        Debug.Log(string.Format("collider collisionCount = {0}", collisionCount));
         GetComponent<Animator>().SetTrigger("push");
 
         Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
         if (direction == otherSheep.direction)
         {
-            if (isPushing)
+            if (!isPushing)
             {
                 if (direction == 1)
                 {
@@ -78,12 +78,12 @@ public class Sheep : MonoBehaviour
             var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
             GameObject.Destroy(effect, 0.5f);
         }
+        isPushing = true;
         AdjustVelocity();
     }
 
     void AdjustVelocity()
     {
-        isPushing = true;
         body.velocity = GameManager.Instance.LaneVelocity(laneIndex);
         // Debug.Log(string.Format("{2} velocity on lane {0} is {1}", laneIndex, GameManager.Instance.LaneVelocity(laneIndex).y, gameObject.name));
     }
