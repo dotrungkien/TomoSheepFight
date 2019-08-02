@@ -90,22 +90,13 @@ public class GameController : MonoBehaviour
 
     public void SpawnLane(int laneIndex)
     {
-        // if (isReady)
-        // {
-        //     SpawnSheeps(true, sheeps[0], laneIndex);
-        //     NextTurn();
-        // }
-        // else
-        // {
         StartCoroutine(PrepareSheep(sheeps[0], laneIndex));
-        // }
     }
 
     public IEnumerator PrepareSheep(int sheepIndex, int laneIndex)
     {
         if (currentSheep == null)
         {
-            Debug.Log("spawng and wait");
             currentSheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             yield return new WaitForSeconds(coolDown);
             currentSheep.BeSpawned();
