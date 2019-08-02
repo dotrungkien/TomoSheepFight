@@ -121,6 +121,8 @@ MonoBehaviour:
   direction: 1
   pushEffect: {fileID: 1682183557618066311, guid: 017666818cf8d48038e4fac611656d37,
     type: 3}
+  laneIndex: 0
+  isPushing: 0
 --- !u!61 &1780951945
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -159,7 +161,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0

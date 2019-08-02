@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,27 @@ public class GameManager : Singleton<GameManager>
     public int wScore;
     public int bScore;
 
+    public int[] bWeights;
+    public int[] wWeights;
+
     private Dictionary<EVENT_TYPE, List<IListener>> listeners = new Dictionary<EVENT_TYPE, List<IListener>>();
+
+    public Vector3 LaneVelocity(int laneIdx)
+    {
+        Vector3 velocity = Vector3.zero;
+
+        if (bWeights[laneIdx] > wWeights[laneIdx])
+        {
+            velocity = Vector3.down / 4f;
+        }
+        if (bWeights[laneIdx] < wWeights[laneIdx])
+        {
+            velocity = Vector3.up / 4f;
+        }
+
+        return velocity;
+    }
+
 
     public void AddListener(EVENT_TYPE eventType, IListener listener)
     {

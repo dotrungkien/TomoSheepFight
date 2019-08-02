@@ -107,7 +107,7 @@ public class GameController : MonoBehaviour
         {
             currentSheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             yield return new WaitForSeconds(coolDown);
-            currentSheep.BeSpawned();
+            currentSheep.BeSpawned(laneIndex);
             NextTurn();
         }
         else
@@ -122,12 +122,12 @@ public class GameController : MonoBehaviour
         if (isWhite)
         {
             Sheep sheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
-            sheep.BeSpawned();
+            sheep.BeSpawned(laneIndex);
         }
         else
         {
             Sheep sheep = Instantiate<Sheep>(blackSheeps[sheepIndex], bSpawnPositions[laneIndex].position, Quaternion.identity, bSpawnPositions[laneIndex]);
-            sheep.BeSpawned();
+            sheep.BeSpawned(laneIndex);
             sheep.direction = -1;
         }
 
