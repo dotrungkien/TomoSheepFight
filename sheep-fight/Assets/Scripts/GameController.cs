@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        maxCooldown = GameManager.GetInstance().maxCooldown;
+        maxCooldown = GameManager.Instance.maxCooldown;
     }
 
     public void UpdateIcons()

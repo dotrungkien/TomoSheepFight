@@ -21,17 +21,17 @@ public class GameUI : MonoBehaviour, IListener
 
     void Start()
     {
-        GameManager.GetInstance().AddListener(EVENT_TYPE.ACCOUNT_READY, this);
-        GameManager.GetInstance().AddListener(EVENT_TYPE.WHITE_FINISH, this);
-        GameManager.GetInstance().AddListener(EVENT_TYPE.BLACK_FINISH, this);
+        GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
+        GameManager.Instance.AddListener(EVENT_TYPE.WHITE_FINISH, this);
+        GameManager.Instance.AddListener(EVENT_TYPE.BLACK_FINISH, this);
         playButton.onClick.AddListener(OnPlay);
         UpdateScore();
     }
 
     void UpdateScore()
     {
-        wScore.text = "" + GameManager.GetInstance().wScore;
-        bScore.text = "" + GameManager.GetInstance().bScore;
+        wScore.text = "" + GameManager.Instance.wScore;
+        bScore.text = "" + GameManager.Instance.bScore;
     }
 
     public void SetAccount(string address)

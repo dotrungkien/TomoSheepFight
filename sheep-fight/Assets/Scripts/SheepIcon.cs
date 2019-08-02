@@ -16,7 +16,7 @@ public class SheepIcon : MonoBehaviour
 
     private void Start()
     {
-        cooldown = GameManager.GetInstance().maxCooldown;
+        cooldown = GameManager.Instance.maxCooldown;
         progress = cooldown;
     }
 

@@ -1,29 +1,37 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public abstract class Singleton<T_TYPE> : MonoBehaviour where T_TYPE : Singleton<T_TYPE>
+public abstract class Singleton<T> : MonoBehaviour where T : Component
 {
-    public static T_TYPE GetInstance()
+    private static T instance;
+    public static T Instance
     {
-        if (_instance == null)
+        get
         {
-            _instance = GameObject.FindObjectOfType(typeof(T_TYPE)) as T_TYPE;
+            if (instance == null)
+            {
+                instance = FindObjectOfType<T>();
+                if (instance == null)
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = typeof(T).Name;
+                    instance = obj.AddComponent<T>();
+                }
+            }
+            return instance;
         }
-        return _instance;
     }
-
-    private void Awake()
+    protected virtual void Awake()
     {
-        T_TYPE instance = GetInstance();
-        if (instance == null) { instance = this as T_TYPE; }
-        if (instance != (this as T_TYPE))
+        if (instance == null)
+        {
+            instance = this as T;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
         {
             Destroy(gameObject);
-            return;
         }
-
-        _instance = instance;
-        GameObject.DontDestroyOnLoad(gameObject);
     }
-
-    private static T_TYPE _instance = null;
 }

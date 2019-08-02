@@ -61,13 +61,13 @@ public class Sheep : MonoBehaviour
         {
             if (direction == 1 && other.transform.position.y > 0) // white up
             {
-                GameManager.GetInstance().bScore = (GameManager.GetInstance().bScore < point) ? 0 : GameManager.GetInstance().bScore - point;
-                GameManager.GetInstance().PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
+                GameManager.Instance.bScore = (GameManager.Instance.bScore < point) ? 0 : GameManager.Instance.bScore - point;
+                GameManager.Instance.PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
             }
             if (direction == -1 && other.transform.position.y < 0) // white up
             {
-                GameManager.GetInstance().wScore = (GameManager.GetInstance().wScore < point) ? 0 : GameManager.GetInstance().wScore - point;
-                GameManager.GetInstance().PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
+                GameManager.Instance.wScore = (GameManager.Instance.wScore < point) ? 0 : GameManager.Instance.wScore - point;
+                GameManager.Instance.PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
             }
             GameObject.Destroy(gameObject);
         }

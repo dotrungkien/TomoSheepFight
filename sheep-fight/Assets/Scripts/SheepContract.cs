@@ -38,7 +38,7 @@ public class SheepContract : MonoBehaviour, IListener
         // var privateKey = ecKey.GetPrivateKey();
         // var privateKey = "0xF557B67ED7DA128F0B3920072A041C93FC9FB5BCDEA16F73F03D6BB340C3D34A"; //tomo
 
-        GameManager.GetInstance().AddListener(EVENT_TYPE.PLAY, this);
+        GameManager.Instance.AddListener(EVENT_TYPE.PLAY, this);
         AccountSetup();
         GetContract();
     }
