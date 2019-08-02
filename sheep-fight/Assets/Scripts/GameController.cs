@@ -21,9 +21,14 @@ public class GameController : MonoBehaviour
     public List<int> sheeps;
     public SheepIcon[] icons;
 
-
+    private float maxCooldown;
     private Sheep currentSheep = null;
     private System.Random rand;
+
+    private void Start()
+    {
+        maxCooldown = GameManager.GetInstance().maxCooldown;
+    }
 
     public void UpdateIcons()
     {
@@ -39,7 +44,7 @@ public class GameController : MonoBehaviour
         while (true)
         {
             SpawnSheeps(false, mockRand.Next() % 5, mockRand.Next() % 5);
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(maxCooldown);
         }
     }
 
@@ -127,7 +132,7 @@ public class GameController : MonoBehaviour
 
     public void ResetCooldown()
     {
-        coolDown = 5.0f;
+        coolDown = maxCooldown;
         isReady = false;
         currentSheep = null;
     }

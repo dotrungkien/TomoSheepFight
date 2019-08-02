@@ -10,9 +10,15 @@ public class SheepIcon : MonoBehaviour
     public Image icon;
     public bool isActive = false;
 
-    public float cooldown = 5f;
-    private float progress = 5f;
+    private float cooldown;
+    private float progress;
     private bool firstTime = true;
+
+    private void Start()
+    {
+        cooldown = GameManager.GetInstance().maxCooldown;
+        progress = cooldown;
+    }
 
     public void SwitchSheep(int idx)
     {

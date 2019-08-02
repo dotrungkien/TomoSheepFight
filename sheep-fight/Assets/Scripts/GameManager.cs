@@ -23,6 +23,8 @@ public interface IListener
 
 public class GameManager : Singleton<GameManager>
 {
+    public float maxCooldown = 5f;
+
     public int wScore;
     public int bScore;
 
