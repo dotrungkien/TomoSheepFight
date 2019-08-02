@@ -34,19 +34,18 @@ public class GameManager : Singleton<GameManager>
 
     private Dictionary<EVENT_TYPE, List<IListener>> listeners = new Dictionary<EVENT_TYPE, List<IListener>>();
 
-    public Vector3 LaneVelocity(int laneIdx)
+    public Vector3 LaneVelocity(int laneIndex)
     {
         Vector3 velocity = Vector3.zero;
 
-        if (bWeights[laneIdx] > wWeights[laneIdx])
+        if (bWeights[laneIndex] > wWeights[laneIndex])
         {
-            velocity = Vector3.down / 4f;
+            velocity = Vector3.down / 3f;
         }
-        if (bWeights[laneIdx] < wWeights[laneIdx])
+        if (bWeights[laneIndex] < wWeights[laneIndex])
         {
-            velocity = Vector3.up / 4f;
+            velocity = Vector3.up / 3f;
         }
-
         return velocity;
     }
 

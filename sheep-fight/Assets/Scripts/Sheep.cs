@@ -17,6 +17,8 @@ public class Sheep : MonoBehaviour
     public bool isPushing = false;
     private Rigidbody2D body;
 
+    private int collisionCount = 0;
+
     void Start()
     {
         isMoving = false;
@@ -37,6 +39,7 @@ public class Sheep : MonoBehaviour
         isIncubating = false;
         isMoving = true;
         laneIndex = _laneIndex;
+        body = GetComponent<Rigidbody2D>();
         body.velocity = direction * Vector3.up / 2f;
         var render = GetComponent<SpriteRenderer>();
         var color = render.color;
@@ -46,14 +49,16 @@ public class Sheep : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.tag == "Sheep")
+        collisionCount += 1;
+        // if (collisionCount > 1) return;
+        // Debug.Log(string.Format("collider collisionCount = {0}", collisionCount));
+        if (other.gameObject.tag != "Sheep") return;
+        GetComponent<Animator>().SetTrigger("push");
+
+        Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
+        if (direction == otherSheep.direction)
         {
-            isPushing = true;
-
-            GetComponent<Animator>().SetTrigger("push");
-
-            Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
-            if (direction == otherSheep.direction)
+            if (isPushing)
             {
                 if (direction == 1)
                 {
@@ -64,21 +69,23 @@ public class Sheep : MonoBehaviour
                     GameManager.Instance.bWeights[laneIndex] += weight;
                 }
             }
-            else if (direction == 1 && otherSheep.direction == -1)
-            {
-                GameManager.Instance.wWeights[laneIndex] += weight;
-                GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
-                Vector3 pushEffectPos = transform.position + Vector3.up * GetComponent<BoxCollider2D>().size.y / 2f;
-                var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
-                GameObject.Destroy(effect, 0.5f);
-            }
-
         }
+        else if (direction == 1 && otherSheep.direction == -1)
+        {
+            GameManager.Instance.wWeights[laneIndex] += weight;
+            GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
+            Vector3 pushEffectPos = transform.position + Vector3.up * GetComponent<BoxCollider2D>().size.y / 2f;
+            var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
+            GameObject.Destroy(effect, 0.5f);
+        }
+        AdjustVelocity();
     }
 
     void AdjustVelocity()
     {
+        isPushing = true;
         body.velocity = GameManager.Instance.LaneVelocity(laneIndex);
+        // Debug.Log(string.Format("{2} velocity on lane {0} is {1}", laneIndex, GameManager.Instance.LaneVelocity(laneIndex).y, gameObject.name));
     }
 
     void OnTriggerEnter2D(Collider2D other)
