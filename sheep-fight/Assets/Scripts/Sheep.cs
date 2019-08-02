@@ -17,8 +17,6 @@ public class Sheep : MonoBehaviour
     public bool isPushing = false;
     private Rigidbody2D body;
 
-    private int collisionCount = 0;
-
     void Start()
     {
         isMoving = false;
@@ -49,34 +47,26 @@ public class Sheep : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.tag != "Sheep") return;
-        collisionCount += 1;
-        if (collisionCount > 2) return;
-        Debug.Log(string.Format("collider collisionCount = {0}", collisionCount));
-        GetComponent<Animator>().SetTrigger("push");
-
-        Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
-        if (direction == otherSheep.direction)
+        Debug.Log(other.gameObject.tag);
+        if (isPushing) return;
+        if (other.gameObject.tag == "Sheep")
         {
-            if (!isPushing)
-            {
-                if (direction == 1)
-                {
-                    GameManager.Instance.wWeights[laneIndex] += weight;
-                }
-                else
-                {
-                    GameManager.Instance.bWeights[laneIndex] += weight;
-                }
-            }
-        }
-        else if (direction == 1 && otherSheep.direction == -1)
-        {
+            GetComponent<Animator>().SetTrigger("push");
+            Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
             GameManager.Instance.wWeights[laneIndex] += weight;
             GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
             Vector3 pushEffectPos = transform.position + Vector3.up * GetComponent<BoxCollider2D>().size.y / 2f;
             var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
             GameObject.Destroy(effect, 0.5f);
+        }
+        if (other.gameObject.tag == "BlackTail")
+        {
+            GameManager.Instance.bWeights[laneIndex] += weight;
+        }
+
+        if (other.gameObject.tag == "WhiteTail")
+        {
+            GameManager.Instance.wWeights[laneIndex] += weight;
         }
         isPushing = true;
         AdjustVelocity();
