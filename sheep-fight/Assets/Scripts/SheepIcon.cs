@@ -9,6 +9,7 @@ public class SheepIcon : MonoBehaviour
     public Sprite[] sheeps;
     public Image icon;
     public bool isActive = false;
+    public bool isBlack = false;
 
     private float cooldown;
     private float progress;
@@ -24,7 +25,7 @@ public class SheepIcon : MonoBehaviour
     {
         if (idx < 0 || idx >= sheeps.Length) return;
         icon.sprite = sheeps[idx];
-        if (firstTime)
+        if (firstTime && !isBlack)
         {
             firstTime = false;
             return;

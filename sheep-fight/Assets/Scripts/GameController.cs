@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
 
     public void UpdateIcons()
     {
-        for (int i = 0; i < icons.Length; i++)
+        for (int i = 0; i < 3; i++)
         {
             icons[i].SwitchSheep(sheeps[i]);
         }
@@ -43,7 +43,10 @@ public class GameController : MonoBehaviour
         System.Random mockRand = new System.Random();
         while (true)
         {
-            SpawnSheeps(false, mockRand.Next() % 5, mockRand.Next() % 5);
+            int sheepIdx = mockRand.Next() % 5;
+            int laneIdx = mockRand.Next() % 5;
+            SpawnSheeps(false, sheepIdx, laneIdx);
+            icons[3].SwitchSheep(sheepIdx);
             yield return new WaitForSeconds(maxCooldown);
         }
     }
