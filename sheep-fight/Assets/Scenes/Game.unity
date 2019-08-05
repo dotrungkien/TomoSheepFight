@@ -4407,16 +4407,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   whiteSheeps:
   - {fileID: 373012591, guid: 8649761a7b2a34f7e8872914b177a9f5, type: 3}
-  - {fileID: 373012591, guid: 8649761a7b2a34f7e8872914b177a9f5, type: 3}
-  - {fileID: 373012591, guid: 8649761a7b2a34f7e8872914b177a9f5, type: 3}
-  - {fileID: 373012591, guid: 8649761a7b2a34f7e8872914b177a9f5, type: 3}
-  - {fileID: 373012591, guid: 8649761a7b2a34f7e8872914b177a9f5, type: 3}
+  - {fileID: 1780951946, guid: 6320f43c394b0482196db29a28127af5, type: 3}
+  - {fileID: 568512080, guid: 26a1064ed500a4769a6d886377a5b432, type: 3}
+  - {fileID: 1488056267, guid: e56dde3e2c90c4d05863d1109c900424, type: 3}
+  - {fileID: 2001572804, guid: 25a1e84910df540e089939ab4070810d, type: 3}
   blackSheeps:
   - {fileID: 672715111, guid: 8727f472e37a941b5b87663da32046b9, type: 3}
-  - {fileID: 672715111, guid: 8727f472e37a941b5b87663da32046b9, type: 3}
-  - {fileID: 672715111, guid: 8727f472e37a941b5b87663da32046b9, type: 3}
-  - {fileID: 672715111, guid: 8727f472e37a941b5b87663da32046b9, type: 3}
-  - {fileID: 672715111, guid: 8727f472e37a941b5b87663da32046b9, type: 3}
+  - {fileID: 1172608673, guid: 84d8e6e33ec314db3b315a183e0d12e8, type: 3}
+  - {fileID: 1774939583, guid: 66fda6e8f81d248c6824347057a1bc88, type: 3}
+  - {fileID: 467776555, guid: 99579be5d44014a3e93d41a1aa63d201, type: 3}
+  - {fileID: 97385236, guid: bf5c6a869c9b742f5a18e9b83a1fc132, type: 3}
   wSpawnPositions:
   - {fileID: 3114686823542085823}
   - {fileID: 169269458}

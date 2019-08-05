@@ -7,8 +7,6 @@ public class Sheep : MonoBehaviour
     public int weight;
     public int point;
     public float vel = 0.5f;
-    public bool isMoving;
-    public bool isIncubating;
     public int direction = 1;
     public GameObject pushEffect;
 
@@ -17,6 +15,8 @@ public class Sheep : MonoBehaviour
     [HideInInspector]
     public bool isPushing = false;
 
+    private bool isIncubating;
+    private bool isMoving;
     private int collisionCount = 0;
     private Vector2 top;
     private LayerMask sheepMask;
@@ -24,7 +24,7 @@ public class Sheep : MonoBehaviour
     private Ray ray;
     private RaycastHit HitInfo;
 
-    void Start()
+    void Awake()
     {
         isMoving = false;
         isIncubating = true;
@@ -40,10 +40,9 @@ public class Sheep : MonoBehaviour
         sheepMask = LayerMask.GetMask("Sheep");
     }
 
-    private void Update()
+    void Update()
     {
-        // top = (Vector2)transform.position + direction * Vector2.up * GetComponent<BoxCollider2D>().size.y / 2f;
-        // RaycastHit2D hit2D = Physics2D.Raycast(top, Vector2.up, 0.2f, sheepMask);
+        if (!isMoving) return;
         if (!IsCollidingVertically())
         {
             transform.Translate(Vector3.up * Time.deltaTime * direction * vel);
@@ -58,7 +57,7 @@ public class Sheep : MonoBehaviour
         Debug.DrawRay(origin, Vector3.up * direction * offset, Color.yellow);
         if (Physics.Raycast(ray, out HitInfo, offset))
         {
-            print("Collided With " + HitInfo.collider.gameObject.name);
+            // print("Collided With " + HitInfo.collider.gameObject.name);
             // direction = -direction;
             return true;
         }
@@ -67,7 +66,6 @@ public class Sheep : MonoBehaviour
 
     public void BeSpawned(int _laneIndex)
     {
-
         isIncubating = false;
         isMoving = true;
         laneIndex = _laneIndex;
@@ -77,43 +75,6 @@ public class Sheep : MonoBehaviour
         color.a = 1f;
         render.color = color;
     }
-
-    // void OnCollisionEnter2D(Collision2D other)
-    // {
-    //     collisionCount += 1;
-    //     // if (collisionCount > 1) return;
-    //     // Debug.Log(string.Format("collider collisionCount = {0}", collisionCount));
-    //     if (other.gameObject.tag == "Sheep")
-    //     {
-    //         GetComponent<Animator>().SetTrigger("push");
-
-    //         Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
-    //         if (direction == otherSheep.direction)
-    //         {
-    //             if (isPushing)
-    //             {
-    //                 if (direction == 1)
-    //                 {
-    //                     GameManager.Instance.wWeights[laneIndex] += weight;
-    //                 }
-    //                 else
-    //                 {
-    //                     GameManager.Instance.bWeights[laneIndex] += weight;
-    //                 }
-    //             }
-    //         }
-    //         else if (direction == 1 && otherSheep.direction == -1)
-    //         {
-    //             GameManager.Instance.wWeights[laneIndex] += weight;
-    //             GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
-    //             Vector3 pushEffectPos = transform.position + Vector3.up * GetComponent<BoxCollider2D>().size.y / 2f;
-    //             var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
-    //             GameObject.Destroy(effect, 0.5f);
-    //         }
-    //         AdjustVelocity();
-    //     }
-    // }
-
 
     void OnTriggerEnter2D(Collider2D other)
     {
