@@ -3,47 +3,42 @@ using System.Collections;
 
 public class Sheep2 : MonoBehaviour
 {
-    private int rayCount = 10;
-    private Vector3 origin;
-    private Vector3 startPoint;
-    private RaycastHit HitInfo;
-    private float LengthOfRay, DistanceBetweenRays, DirectionFactor;
-    private float margin = 0.015f;
+
+    public int weight;
+    public int point;
+    public float vel = 0.5f;
     private Ray ray;
+    private RaycastHit HitInfo;
+    private Vector3 origin;
     private BoxCollider myCollider;
+    private int direction = 1;
+    private float rayLength;
 
     void Start()
     {
         myCollider = GetComponent<BoxCollider>();
-        LengthOfRay = myCollider.size.y / 2f;
-        Debug.Log(LengthOfRay);
-        DirectionFactor = Mathf.Sign(Vector3.up.y);
+        rayLength = myCollider.size.y / 2f;
+        Debug.Log(rayLength);
     }
 
     void Update()
     {
-        startPoint = new Vector3(myCollider.bounds.min.x + margin, transform.position.y, transform.position.z);
         if (!IsCollidingVertically())
         {
-            transform.Translate(Vector3.up * Time.deltaTime * DirectionFactor * 0.5f);
+            transform.Translate(Vector3.up * Time.deltaTime * direction * vel);
         }
     }
 
     bool IsCollidingVertically()
     {
         origin = transform.position;
-        DistanceBetweenRays = (myCollider.bounds.size.x - 2 * margin) / (rayCount - 1);
-        for (int i = 0; i < rayCount; i++)
+        ray = new Ray(origin, Vector3.up * direction * rayLength);
+        Debug.DrawRay(origin, Vector3.up * direction * rayLength, Color.yellow);
+        if (Physics.Raycast(ray, out HitInfo, rayLength))
         {
-            ray = new Ray(origin, Vector3.up * DirectionFactor * LengthOfRay);
-            Debug.DrawRay(origin, Vector3.up * DirectionFactor * LengthOfRay, Color.yellow);
-            if (Physics.Raycast(ray, out HitInfo, LengthOfRay))
-            {
-                print("Collided With " + HitInfo.collider.gameObject.name);
-                DirectionFactor = -DirectionFactor;
-                return true;
-            }
-            origin += new Vector3(DistanceBetweenRays, 0, 0);
+            print("Collided With " + HitInfo.collider.gameObject.name);
+            direction = -direction;
+            return true;
         }
         return false;
     }
