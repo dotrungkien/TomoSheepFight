@@ -17,6 +17,10 @@ public class Sheep : MonoBehaviour
     public bool isPushing = false;
     private Rigidbody2D body;
 
+    private int collisionCount = 0;
+    private Vector2 top;
+    private LayerMask sheepMask;
+
     void Start()
     {
         isMoving = false;
@@ -29,6 +33,15 @@ public class Sheep : MonoBehaviour
             color.a = 0.5f;
             render.color = color;
         }
+
+        sheepMask = LayerMask.GetMask("Sheep");
+    }
+
+    private void FixedUpdate()
+    {
+        top = (Vector2)transform.position + direction * Vector2.up * GetComponent<BoxCollider2D>().size.y / 2f;
+        RaycastHit2D hit2D = Physics2D.Raycast(top, Vector2.up, 0.2f, sheepMask);
+        Debug.DrawRay((Vector3)top, Vector3.up * 0.2f, Color.yellow);
     }
 
     public void BeSpawned(int _laneIndex)
@@ -47,29 +60,38 @@ public class Sheep : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log(other.gameObject.tag);
-        if (isPushing) return;
+        collisionCount += 1;
+        // if (collisionCount > 1) return;
+        // Debug.Log(string.Format("collider collisionCount = {0}", collisionCount));
         if (other.gameObject.tag == "Sheep")
         {
             GetComponent<Animator>().SetTrigger("push");
-            Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
-            GameManager.Instance.wWeights[laneIndex] += weight;
-            GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
-            Vector3 pushEffectPos = transform.position + Vector3.up * GetComponent<BoxCollider2D>().size.y / 2f;
-            var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
-            GameObject.Destroy(effect, 0.5f);
-        }
-        if (other.gameObject.tag == "BlackTail")
-        {
-            GameManager.Instance.bWeights[laneIndex] += weight;
-        }
 
-        if (other.gameObject.tag == "WhiteTail")
-        {
-            GameManager.Instance.wWeights[laneIndex] += weight;
+            Sheep otherSheep = other.gameObject.GetComponent<Sheep>();
+            if (direction == otherSheep.direction)
+            {
+                if (isPushing)
+                {
+                    if (direction == 1)
+                    {
+                        GameManager.Instance.wWeights[laneIndex] += weight;
+                    }
+                    else
+                    {
+                        GameManager.Instance.bWeights[laneIndex] += weight;
+                    }
+                }
+            }
+            else if (direction == 1 && otherSheep.direction == -1)
+            {
+                GameManager.Instance.wWeights[laneIndex] += weight;
+                GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
+                Vector3 pushEffectPos = transform.position + Vector3.up * GetComponent<BoxCollider2D>().size.y / 2f;
+                var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
+                GameObject.Destroy(effect, 0.5f);
+            }
+            AdjustVelocity();
         }
-        isPushing = true;
-        AdjustVelocity();
     }
 
     void AdjustVelocity()

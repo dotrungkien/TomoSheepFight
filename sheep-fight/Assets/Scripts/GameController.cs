@@ -45,7 +45,7 @@ public class GameController : MonoBehaviour
         {
             int sheepIdx = mockRand.Next() % 5;
             int laneIdx = mockRand.Next() % 5;
-            SpawnSheeps(false, 0, laneIdx);
+            SpawnSheeps(false, sheepIdx, laneIdx);
             icons[3].SwitchSheep(sheepIdx);
             yield return new WaitForSeconds(maxCooldown);
         }
@@ -98,8 +98,7 @@ public class GameController : MonoBehaviour
 
     public void SpawnLane(int laneIndex)
     {
-        // StartCoroutine(PrepareSheep(sheeps[0], laneIndex));
-        StartCoroutine(PrepareSheep(0, laneIndex));
+        StartCoroutine(PrepareSheep(sheeps[0], laneIndex));
     }
 
     public IEnumerator PrepareSheep(int sheepIndex, int laneIndex)
