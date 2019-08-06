@@ -8,10 +8,13 @@ using Nethereum.Hex.HexTypes;
 
 public class GameUI : MonoBehaviour, IListener
 {
+    public Image whiteBar;
     public Text wScore;
+    public Image blackBar;
     public Text bScore;
     public Text account;
     public Text balance;
+
 
     public Button playButton;
     public Button homeButton;
@@ -40,7 +43,9 @@ public class GameUI : MonoBehaviour, IListener
     void UpdateScore()
     {
         wScore.text = "" + GameManager.Instance.wScore;
+        whiteBar.fillAmount = GameManager.Instance.wScore / 100f;
         bScore.text = "" + GameManager.Instance.bScore;
+        blackBar.fillAmount = GameManager.Instance.bScore / 100f;
     }
 
     public void SetAccount(string address)

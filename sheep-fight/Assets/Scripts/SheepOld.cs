@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sheep5 : MonoBehaviour
+public class SheepOld : MonoBehaviour
 {
     public int weight;
     public int point;
