@@ -127,8 +127,8 @@ public class GameController : MonoBehaviour
         else
         {
             Sheep sheep = Instantiate<Sheep>(blackSheeps[sheepIndex], bSpawnPositions[laneIndex].position, Quaternion.identity, bSpawnPositions[laneIndex]);
+            // sheep.direction = -1;
             sheep.BeSpawned(laneIndex);
-            sheep.direction = -1;
         }
 
     }

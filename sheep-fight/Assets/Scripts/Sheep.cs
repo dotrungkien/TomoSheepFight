@@ -8,6 +8,7 @@ public class Sheep : MonoBehaviour
     public int point;
     public float vel = 0.5f;
     public int direction = 1;
+    public bool isWhite = true;
     public GameObject pushEffect;
 
     [HideInInspector]
@@ -19,7 +20,6 @@ public class Sheep : MonoBehaviour
     private bool isMoving;
     private int collisionCount = 0;
     private Vector2 top;
-    private LayerMask sheepMask;
     private float rayLength;
     private Ray ray;
     private RaycastHit HitInfo;
@@ -37,7 +37,6 @@ public class Sheep : MonoBehaviour
         }
 
         rayLength = GetComponent<BoxCollider>().size.y * 0.8f / 2f;
-        sheepMask = LayerMask.GetMask("Sheep");
     }
 
     void Update()
@@ -47,8 +46,11 @@ public class Sheep : MonoBehaviour
         {
             CheckCollision();
         }
+        else
+        {
+            AdjustVelocity();
+        }
         transform.Translate(Vector3.up * Time.deltaTime * direction * vel);
-        Debug.DrawRay(transform.position, Vector3.up * rayLength * direction, Color.yellow);
     }
 
     void CheckCollision()
@@ -59,18 +61,44 @@ public class Sheep : MonoBehaviour
         {
             GetComponent<Animator>().SetTrigger("push");
             GameObject other = HitInfo.collider.gameObject;
-            // print("Collided With " + other.name);
-            Sheep otherSheep = other.GetComponent<Sheep>();
-            if (direction == 1 && otherSheep.direction == -1)
+            if (other.tag == "Sheep" && !isPushing)
             {
-                GameManager.Instance.wWeights[laneIndex] += weight;
-                GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
-                Vector3 pushEffectPos = transform.position + Vector3.up * direction * rayLength;
-                var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
-                GameObject.Destroy(effect, 0.5f);
+                Sheep otherSheep = other.GetComponent<Sheep>();
+                if (isWhite && !otherSheep.isWhite)
+                {
+                    GameManager.Instance.wWeights[laneIndex] += weight;
+                    GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
+                    Vector3 pushEffectPos = transform.position + Vector3.up * direction * rayLength;
+                    var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
+                    GameObject.Destroy(effect, 0.5f);
+                }
+                if (isWhite && otherSheep.isWhite) GameManager.Instance.wWeights[laneIndex] += weight;
+                if (!isWhite && !otherSheep.isWhite) GameManager.Instance.bWeights[laneIndex] += weight;
+
+                isPushing = true;
             }
-            isPushing = true;
-            AdjustVelocity();
+            if (other.tag == "Finish")
+            {
+                if (isWhite)
+                {
+                    if (isPushing) GameManager.Instance.wWeights[laneIndex] -= weight;
+                    if (other.transform.position.y > 0)
+                    {
+                        GameManager.Instance.bScore = (GameManager.Instance.bScore < point) ? 0 : GameManager.Instance.bScore - point;
+                        GameManager.Instance.PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
+                    }
+                }
+                else
+                {
+                    if (isPushing) GameManager.Instance.bWeights[laneIndex] -= weight;
+                    if (other.transform.position.y < 0)
+                    {
+                        GameManager.Instance.wScore = (GameManager.Instance.wScore < point) ? 0 : GameManager.Instance.wScore - point;
+                        GameManager.Instance.PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
+                    }
+                }
+                GameObject.Destroy(gameObject);
+            }
         }
     }
 
@@ -85,40 +113,9 @@ public class Sheep : MonoBehaviour
         isIncubating = false;
         isMoving = true;
         laneIndex = _laneIndex;
-        // body.velocity = direction * Vector3.up / 2f;
         var render = GetComponent<SpriteRenderer>();
         var color = render.color;
         color.a = 1f;
         render.color = color;
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Finish")
-        {
-            if (isPushing)
-            {
-                isPushing = false;
-                if (direction == 1)
-                {
-                    GameManager.Instance.wWeights[laneIndex] -= weight;
-                }
-                else
-                {
-                    GameManager.Instance.bWeights[laneIndex] -= weight;
-                }
-            }
-            if (direction == 1 && other.transform.position.y > 0) // white up
-            {
-                GameManager.Instance.bScore = (GameManager.Instance.bScore < point) ? 0 : GameManager.Instance.bScore - point;
-                GameManager.Instance.PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
-            }
-            if (direction == -1 && other.transform.position.y < 0) // white up
-            {
-                GameManager.Instance.wScore = (GameManager.Instance.wScore < point) ? 0 : GameManager.Instance.wScore - point;
-                GameManager.Instance.PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
-            }
-            GameObject.Destroy(gameObject);
-        }
     }
 }

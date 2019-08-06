@@ -116,9 +116,8 @@ MonoBehaviour:
   weight: 20
   point: 5
   vel: 0.5
-  isMoving: 0
-  isIncubating: 0
   direction: 1
+  isWhite: 1
   pushEffect: {fileID: 1682183557618066311, guid: 017666818cf8d48038e4fac611656d37,
     type: 3}
   laneIndex: 0
