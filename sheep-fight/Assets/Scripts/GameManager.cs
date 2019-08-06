@@ -49,6 +49,11 @@ public class GameManager : Singleton<GameManager>
         return velocity;
     }
 
+    public int LaneDirection(int laneIndex)
+    {
+        return bWeights[laneIndex] > wWeights[laneIndex] ? -1 : bWeights[laneIndex] < wWeights[laneIndex] ? 1 : 0;
+    }
+
 
     public void AddListener(EVENT_TYPE eventType, IListener listener)
     {

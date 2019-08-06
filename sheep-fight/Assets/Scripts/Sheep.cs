@@ -20,7 +20,7 @@ public class Sheep : MonoBehaviour
     private int collisionCount = 0;
     private Vector2 top;
     private LayerMask sheepMask;
-    private float offset;
+    private float rayLength;
     private Ray ray;
     private RaycastHit HitInfo;
 
@@ -36,32 +36,48 @@ public class Sheep : MonoBehaviour
             render.color = color;
         }
 
-        offset = GetComponent<BoxCollider>().size.y / 2f;
+        rayLength = GetComponent<BoxCollider>().size.y * 0.8f / 2f;
         sheepMask = LayerMask.GetMask("Sheep");
     }
 
     void Update()
     {
         if (!isMoving) return;
-        if (!IsCollidingVertically())
+        if (!isPushing)
         {
-            transform.Translate(Vector3.up * Time.deltaTime * direction * vel);
+            CheckCollision();
         }
-        Debug.DrawRay(transform.position, Vector3.up * offset * direction, Color.yellow);
+        transform.Translate(Vector3.up * Time.deltaTime * direction * vel);
+        Debug.DrawRay(transform.position, Vector3.up * rayLength * direction, Color.yellow);
     }
 
-    bool IsCollidingVertically()
+    void CheckCollision()
     {
         Vector3 origin = transform.position;
-        ray = new Ray(origin, Vector3.up * direction * offset);
-        Debug.DrawRay(origin, Vector3.up * direction * offset, Color.yellow);
-        if (Physics.Raycast(ray, out HitInfo, offset))
+        ray = new Ray(origin, Vector3.up * direction * rayLength);
+        if (Physics.Raycast(ray, out HitInfo, rayLength))
         {
-            // print("Collided With " + HitInfo.collider.gameObject.name);
-            // direction = -direction;
-            return true;
+            GetComponent<Animator>().SetTrigger("push");
+            GameObject other = HitInfo.collider.gameObject;
+            // print("Collided With " + other.name);
+            Sheep otherSheep = other.GetComponent<Sheep>();
+            if (direction == 1 && otherSheep.direction == -1)
+            {
+                GameManager.Instance.wWeights[laneIndex] += weight;
+                GameManager.Instance.bWeights[laneIndex] += otherSheep.weight;
+                Vector3 pushEffectPos = transform.position + Vector3.up * direction * rayLength;
+                var effect = GameObject.Instantiate(pushEffect, pushEffectPos, Quaternion.identity);
+                GameObject.Destroy(effect, 0.5f);
+            }
+            isPushing = true;
+            AdjustVelocity();
         }
-        return false;
+    }
+
+    void AdjustVelocity()
+    {
+        direction = GameManager.Instance.LaneDirection(laneIndex);
+        vel = 0.3f;
     }
 
     public void BeSpawned(int _laneIndex)
