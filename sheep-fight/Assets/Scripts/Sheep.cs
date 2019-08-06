@@ -35,8 +35,8 @@ public class Sheep : MonoBehaviour
             color.a = 0.5f;
             render.color = color;
         }
-
         rayLength = GetComponent<BoxCollider>().size.y * 0.8f / 2f;
+        GetComponent<BoxCollider>().isTrigger = true;
     }
 
     void Update()
@@ -95,6 +95,7 @@ public class Sheep : MonoBehaviour
         var color = render.color;
         color.a = 1f;
         render.color = color;
+        GetComponent<BoxCollider>().isTrigger = false;
     }
 
     void OnTriggerEnter(Collider other)
