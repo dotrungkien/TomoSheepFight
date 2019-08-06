@@ -77,28 +77,6 @@ public class Sheep : MonoBehaviour
 
                 isPushing = true;
             }
-            if (other.tag == "Finish")
-            {
-                if (isWhite)
-                {
-                    if (isPushing) GameManager.Instance.wWeights[laneIndex] -= weight;
-                    if (other.transform.position.y > 0)
-                    {
-                        GameManager.Instance.bScore = (GameManager.Instance.bScore < point) ? 0 : GameManager.Instance.bScore - point;
-                        GameManager.Instance.PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
-                    }
-                }
-                else
-                {
-                    if (isPushing) GameManager.Instance.bWeights[laneIndex] -= weight;
-                    if (other.transform.position.y < 0)
-                    {
-                        GameManager.Instance.wScore = (GameManager.Instance.wScore < point) ? 0 : GameManager.Instance.wScore - point;
-                        GameManager.Instance.PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
-                    }
-                }
-                GameObject.Destroy(gameObject);
-            }
         }
     }
 
@@ -117,5 +95,29 @@ public class Sheep : MonoBehaviour
         var color = render.color;
         color.a = 1f;
         render.color = color;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag != "Finish") return;
+        if (isWhite)
+        {
+            if (isPushing) GameManager.Instance.wWeights[laneIndex] -= weight;
+            if (other.transform.position.y > 0)
+            {
+                GameManager.Instance.bScore = (GameManager.Instance.bScore < point) ? 0 : GameManager.Instance.bScore - point;
+                GameManager.Instance.PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
+            }
+        }
+        else
+        {
+            if (isPushing) GameManager.Instance.bWeights[laneIndex] -= weight;
+            if (other.transform.position.y < 0)
+            {
+                GameManager.Instance.wScore = (GameManager.Instance.wScore < point) ? 0 : GameManager.Instance.wScore - point;
+                GameManager.Instance.PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
+            }
+        }
+        GameObject.Destroy(gameObject);
     }
 }
