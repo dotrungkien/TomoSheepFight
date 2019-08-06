@@ -3037,12 +3037,13 @@ MonoBehaviour:
   account: {fileID: 366248863}
   balance: {fileID: 1012723937}
   playButton: {fileID: 1108563201}
+  homeButton: {fileID: 163974968}
   gameOverPanel: {fileID: 506337135}
   winText: {fileID: 47125110}
   loseText: {fileID: 1438958684}
   controller: {fileID: 1068698413}
   contract: {fileID: 1041407449}
-  mainMenu: {fileID: 1406537447}
+  lobby: {fileID: 1406537447}
 --- !u!1 &707731677
 GameObject:
   m_ObjectHideFlags: 0

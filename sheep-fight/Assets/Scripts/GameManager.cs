@@ -34,6 +34,17 @@ public class GameManager : Singleton<GameManager>
 
     private Dictionary<EVENT_TYPE, List<IListener>> listeners = new Dictionary<EVENT_TYPE, List<IListener>>();
 
+    public void ResetGame()
+    {
+        wScore = 100;
+        bScore = 100;
+        for (int i = 0; i < bWeights.Length; i++)
+        {
+            bWeights[i] = 0;
+            wWeights[i] = 0;
+        }
+    }
+
     public Vector3 LaneVelocity(int laneIndex)
     {
         Vector3 velocity = Vector3.zero;

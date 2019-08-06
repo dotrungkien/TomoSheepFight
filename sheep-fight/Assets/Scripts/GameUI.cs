@@ -14,6 +14,8 @@ public class GameUI : MonoBehaviour, IListener
     public Text balance;
 
     public Button playButton;
+    public Button homeButton;
+
     public GameObject gameOverPanel;
     public GameObject winText;
     public GameObject loseText;
@@ -21,7 +23,7 @@ public class GameUI : MonoBehaviour, IListener
     public GameController controller;
     public SheepContract contract;
 
-    public GameObject mainMenu;
+    public GameObject lobby;
 
     void Start()
     {
@@ -30,6 +32,7 @@ public class GameUI : MonoBehaviour, IListener
         GameManager.Instance.AddListener(EVENT_TYPE.BLACK_FINISH, this);
         GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
         playButton.onClick.AddListener(OnPlay);
+        homeButton.onClick.AddListener(ResetGame);
         gameOverPanel.SetActive(false);
         UpdateScore();
     }
@@ -52,7 +55,7 @@ public class GameUI : MonoBehaviour, IListener
 
     public async void OnPlay()
     {
-        mainMenu.SetActive(false);
+        lobby.SetActive(false);
         string tx = await contract.Play();
         controller.Play(tx);
     }
@@ -62,6 +65,13 @@ public class GameUI : MonoBehaviour, IListener
         gameOverPanel.SetActive(true);
         winText.SetActive(isWon);
         loseText.SetActive(!isWon);
+    }
+
+    public void ResetGame()
+    {
+        gameOverPanel.SetActive(false);
+        lobby.SetActive(true);
+        GameManager.Instance.ResetGame();
     }
 
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
