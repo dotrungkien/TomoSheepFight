@@ -52,8 +52,8 @@ public class SheepContract : MonoBehaviour, IListener
         Debug.Log(string.Format("account {0}", account.Address));
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         Debug.Log(string.Format("ETH balance {0}", Web3.Convert.FromWei(ethBalance.Value)));
-        // gameUI.SetAccount(account.Address);
-        // gameUI.SetBalance(string.Format("{0:0.00} ETH", Web3.Convert.FromWei(ethBalance.Value)));
+        gameUI.SetAccount(account.Address);
+        gameUI.SetBalance(string.Format("{0:0.00} ETH", Web3.Convert.FromWei(ethBalance.Value)));
     }
 
     async void GetContract()
@@ -63,19 +63,12 @@ public class SheepContract : MonoBehaviour, IListener
         contract = web3.Eth.GetContract(abi, address);
 
         bool isPlaying = await CheckPlaying();
-        // Debug.Log(string.Format("Is Playing Before: {0}", isPlaying));
-        // await EndGame(false);
-        // if (!isPlaying)
-        // {
-        //     await Play();
-        // }
         if (isPlaying)
         {
             await EndGame(false);
         }
-        // await Play();
-        gameUI.OnPlay();
-        // Debug.Log(string.Format("Is Playing After: {0}", await CheckPlaying()));
+        GameManager.Instance.PostNotification(EVENT_TYPE.ACCOUNT_READY);
+        // gameUI.OnPlay(); // for test directly from play scene
     }
 
     public async Task<bool> CheckPlaying()
@@ -94,7 +87,7 @@ public class SheepContract : MonoBehaviour, IListener
         return tx;
     }
 
-    async Task<string> EndGame(bool isWon)
+    public async Task<string> EndGame(bool isWon)
     {
         var endgameFunction = contract.GetFunction("endGame");
         var gas = await endgameFunction.EstimateGasAsync(isWon);

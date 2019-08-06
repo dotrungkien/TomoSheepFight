@@ -2567,8 +2567,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCooldown: 5
-  wScore: 1
-  bScore: 99
+  wScore: 100
+  bScore: 100
   bWeights: 0000000000000000000000000000000000000000
   wWeights: 0000000000000000000000000000000000000000
 --- !u!4 &559792991
@@ -5071,7 +5071,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1406537448
 RectTransform:
   m_ObjectHideFlags: 0
