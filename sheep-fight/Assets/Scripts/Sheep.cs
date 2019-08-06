@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sheep : MonoBehaviour
+public class Sheep : MonoBehaviour, IListener
 {
     public int weight;
     public int point;
@@ -96,6 +96,7 @@ public class Sheep : MonoBehaviour
         color.a = 1f;
         render.color = color;
         GetComponent<BoxCollider>().isTrigger = false;
+        GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
     }
 
     void OnTriggerEnter(Collider other)
@@ -107,6 +108,7 @@ public class Sheep : MonoBehaviour
             if (other.transform.position.y > 0)
             {
                 GameManager.Instance.bScore = (GameManager.Instance.bScore < point) ? 0 : GameManager.Instance.bScore - point;
+                if (GameManager.Instance.bScore <= 0) GameManager.Instance.PostNotification(EVENT_TYPE.GAMEOVER, this, true); // white win
                 GameManager.Instance.PostNotification(EVENT_TYPE.BLACK_FINISH, this, point);
             }
         }
@@ -116,9 +118,26 @@ public class Sheep : MonoBehaviour
             if (other.transform.position.y < 0)
             {
                 GameManager.Instance.wScore = (GameManager.Instance.wScore < point) ? 0 : GameManager.Instance.wScore - point;
+                if (GameManager.Instance.wScore <= 0) GameManager.Instance.PostNotification(EVENT_TYPE.GAMEOVER, this, false); // white win
                 GameManager.Instance.PostNotification(EVENT_TYPE.WHITE_FINISH, this, point);
             }
         }
         GameObject.Destroy(gameObject);
+    }
+
+    public void GameOver()
+    {
+        isMoving = false;
+        isPushing = false;
+    }
+
+    public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
+    {
+        switch (eventType)
+        {
+            case EVENT_TYPE.GAMEOVER:
+                GameOver();
+                break;
+        }
     }
 }

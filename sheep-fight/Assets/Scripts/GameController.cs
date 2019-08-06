@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviour, IListener
 {
     public Sheep[] whiteSheeps;
     public Sheep[] blackSheeps;
@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         maxCooldown = GameManager.Instance.maxCooldown;
+        GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
     }
 
     public void UpdateIcons()
@@ -68,12 +69,11 @@ public class GameController : MonoBehaviour
         int seed = Convert.ToInt32(subTx, 16);
         rand = new System.Random(seed);
         sheeps = new List<int>();
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 100; i++)
         {
             sheeps.Add(rand.Next() % 5);
         }
         UpdateIcons();
-        // Debug.Log(string.Format("First 5 sheeps: {0}", string.Join(", ", sheeps.Take(5))));
     }
 
     public void AddNewSheep()
@@ -138,5 +138,21 @@ public class GameController : MonoBehaviour
         coolDown = maxCooldown;
         isReady = false;
         currentSheep = null;
+    }
+
+    public void GameOver()
+    {
+        isPlaying = false;
+        StopAllCoroutines();
+    }
+
+    public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
+    {
+        switch (eventType)
+        {
+            case EVENT_TYPE.GAMEOVER:
+                GameOver();
+                break;
+        }
     }
 }
