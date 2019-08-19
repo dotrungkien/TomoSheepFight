@@ -59,12 +59,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("OnJoinedRoom(). Now this client is in a room.");
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-        {
-            Debug.LogFormat("Current room {0}", PhotonNetwork.CurrentRoom.Name);
-            // PhotonNetwork.LoadLevel("Room for 1");
-        }
+        Debug.LogFormat("OnJoinedRoom() {0}.", PhotonNetwork.CurrentRoom.Name);
+        // PhotonNetwork.LoadLevel("Room for 1");
     }
-
 }
