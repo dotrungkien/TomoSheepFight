@@ -2,13 +2,15 @@
 using Photon.Pun;
 using Photon.Realtime;
 
-public class Launcher : MonoBehaviourPunCallbacks
+public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
 {
     string gameVersion = "1";
     [SerializeField]
     private byte maxPlayersPerRoom = 2;
 
     bool isConnecting;
+
+    public string turn = "1 2";
 
     void Awake()
     {
@@ -61,5 +63,19 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.LogFormat("OnJoinedRoom() {0}.", PhotonNetwork.CurrentRoom.Name);
         // PhotonNetwork.LoadLevel("Room for 1");
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // We own this player: send the others our data
+            stream.SendNext(turn);
+        }
+        else
+        {
+            // Network player, receive data
+            this.turn = (string)stream.ReceiveNext();
+        }
     }
 }
