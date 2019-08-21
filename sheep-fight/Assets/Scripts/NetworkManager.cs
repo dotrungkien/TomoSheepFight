@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -25,8 +26,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
 
     void Start()
     {
-        turn = mockRand.Next().ToString();
-        myTurn.text = string.Format("My Turn: {0}", turn);
+        ResetText();
         Connect();
     }
 
@@ -69,25 +69,23 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnPlayerEnteredRoom(Player other)
     {
-        Debug.Log("OnPlayerEnteredRoom() " + other.NickName); // not seen if you're the player connecting
+        // Debug.Log("OnPlayerEnteredRoom() " + other.NickName); // not seen if you're the player connecting
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-        }
-        Debug.LogFormat("Start Game {0}", PhotonNetwork.CurrentRoom.Name);
+        // if (PhotonNetwork.IsMasterClient)
+        // {
+        //     Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+        // }
+
+        var players = PhotonNetwork.CurrentRoom.Players;
+        var key = new List<int>(players.Keys);
+        Debug.Log(key[0]);
+        Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
         StartCoroutine(ChangeNext2());
-    }
-
-    public override void OnPlayerLeftRoom(Player other)
-    {
-        Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
-        PhotonNetwork.LeaveRoom();
     }
 
     public override void OnJoinedRoom()
     {
-        // Debug.LogFormat("OnJoinedRoom() {0}. players = {1}", PhotonNetwork.CurrentRoom.Name, PhotonNetwork.CurrentRoom.PlayerCount);
+        // Debug.LogFormat("Joined game {0}", PhotonNetwork.CurrentRoom.Name);
         // // PhotonNetwork.LoadLevel("Room for 1");
         // if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom)
         // {
@@ -95,8 +93,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
         // }
     }
 
+
+    public override void OnPlayerLeftRoom(Player other)
+    {
+        Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
+        PhotonNetwork.LeaveRoom();
+    }
+
     public override void OnLeftRoom()
     {
+        ResetText();
         // SceneManager.LoadScene("PunBasics-Launcher");
         // GameManager.Instance.PostNotification(EVENT_TYPE.GAMEOVER, this, PhotonNetwork.CurrentRoom.Name);
     }
@@ -105,6 +111,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
     {
         turn = string.Format("{0} {1}", mockRand.Next() % 5, mockRand.Next() % 5);
         myTurn.text = string.Format("My Turn: {0}", turn);
+    }
+
+    public void ResetText()
+    {
+        myTurn.text = "My Turn: NA";
+        otherTurn.text = "Other Turn: NA";
     }
 
     IEnumerator ChangeNext2()
