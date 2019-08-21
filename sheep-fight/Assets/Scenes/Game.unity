@@ -6010,7 +6010,7 @@ GameObject:
   - component: {fileID: 1563237660}
   - component: {fileID: 1563237662}
   m_Layer: 0
-  m_Name: Connection
+  m_Name: Photon Network
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6025,7 +6025,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1563237659}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d479dfb07a02747a7a80156de4968f39, type: 3}
+  m_Script: {fileID: 11500000, guid: e38fc543f781e44c8b98d0318a8a74f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlayersPerRoom: 2

@@ -4,16 +4,13 @@ using Photon.Realtime;
 using UnityEngine.UI;
 
 
-public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
+public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     string gameVersion = "1";
-    [SerializeField]
+    bool isConnecting;
     private byte maxPlayersPerRoom = 2;
 
-    bool isConnecting;
-
     private string turn;
-
     public Text myTurn;
     public Text otherTurn;
 
@@ -50,7 +47,7 @@ public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("OnConnectedToMaster()");
+        // Debug.Log("OnConnectedToMaster()");
         if (isConnecting)
         {
             PhotonNetwork.JoinRandomRoom();
@@ -59,19 +56,49 @@ public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.LogWarningFormat("OnDisconnected() with reason {0}", cause);
+        // Debug.LogWarningFormat("OnDisconnected() with reason {0}", cause);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("OnJoinRandomFailed. No random room available, so we create one.");
+        // Debug.Log("OnJoinRandomFailed. No random room available, so we create one.");
         PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom });
+    }
+
+    public override void OnPlayerEnteredRoom(Player other)
+    {
+        Debug.Log("OnPlayerEnteredRoom() " + other.NickName); // not seen if you're the player connecting
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Player other)
+    {
+        Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+        }
     }
 
     public override void OnJoinedRoom()
     {
-        Debug.LogFormat("OnJoinedRoom() {0}.", PhotonNetwork.CurrentRoom.Name);
+        Debug.LogFormat("OnJoinedRoom() {0}. players = {1}", PhotonNetwork.CurrentRoom.Name, PhotonNetwork.CurrentRoom.PlayerCount);
         // PhotonNetwork.LoadLevel("Room for 1");
+        if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom)
+        {
+            Debug.LogFormat("Start Game {0}", PhotonNetwork.CurrentRoom.Name);
+        }
+    }
+
+    public override void OnLeftRoom()
+    {
+        // SceneManager.LoadScene("PunBasics-Launcher");
+        GameManager.Instance.PostNotification(EVENT_TYPE.GAMEOVER, this, PhotonNetwork.CurrentRoom.Name);
     }
 
     public void ChangeNext()
@@ -86,11 +113,11 @@ public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
         {
             // We own this player: send the others our data
             stream.SendNext(turn);
-
         }
         else
         {
             // Network player, receive data
+            Debug.LogFormat((string)stream.ReceiveNext());
             otherTurn.text = string.Format("Other Turn: {0}", (string)stream.ReceiveNext());
         }
     }
