@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.UI;
+
 
 public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -10,7 +12,12 @@ public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
 
     bool isConnecting;
 
-    public string turn = "1 2";
+    private string turn;
+
+    public Text myTurn;
+    public Text otherTurn;
+
+    System.Random mockRand = new System.Random();
 
     void Awake()
     {
@@ -19,6 +26,8 @@ public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
 
     void Start()
     {
+        turn = mockRand.Next().ToString();
+        myTurn.text = string.Format("My Turn: {0}", turn);
         Connect();
     }
 
@@ -65,17 +74,24 @@ public class Launcher : MonoBehaviourPunCallbacks, IPunObservable
         // PhotonNetwork.LoadLevel("Room for 1");
     }
 
+    public void ChangeNext()
+    {
+        turn = mockRand.Next().ToString();
+        myTurn.text = string.Format("My Turn: {0}", turn);
+    }
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
             // We own this player: send the others our data
             stream.SendNext(turn);
+
         }
         else
         {
             // Network player, receive data
-            this.turn = (string)stream.ReceiveNext();
+            otherTurn.text = string.Format("Other Turn: {0}", (string)stream.ReceiveNext());
         }
     }
 }
