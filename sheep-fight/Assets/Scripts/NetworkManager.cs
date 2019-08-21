@@ -76,21 +76,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
         //     Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
         // }
 
-        var players = PhotonNetwork.CurrentRoom.Players;
-        var key = new List<int>(players.Keys);
-        Debug.Log(key[0]);
-        Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
-        StartCoroutine(ChangeNext2());
+        StartGame();
     }
 
     public override void OnJoinedRoom()
     {
         // Debug.LogFormat("Joined game {0}", PhotonNetwork.CurrentRoom.Name);
         // // PhotonNetwork.LoadLevel("Room for 1");
-        // if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom)
-        // {
-        //     Debug.LogFormat("Start Game {0}", PhotonNetwork.CurrentRoom.Name);
-        // }
+        if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom)
+        {
+            StartGame();
+        }
+    }
+
+    public void StartGame()
+    {
+        var players = PhotonNetwork.CurrentRoom.Players;
+        Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
+        StartCoroutine(ChangeNext2());
     }
 
 
