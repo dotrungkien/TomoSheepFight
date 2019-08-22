@@ -53,6 +53,13 @@ contract SheepFight {
         playerToGame[msg.sender] = "";
     }
 
+    function forceEndGame()
+        external
+    {
+        isPlaying[msg.sender] = false;
+        playerToGame[msg.sender] = "";
+    }
+
     function compareStringsbyBytes(string memory s1, string memory  s2)
         public
         pure

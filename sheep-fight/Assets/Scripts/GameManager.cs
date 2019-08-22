@@ -24,6 +24,8 @@ public interface IListener
 
 public class GameManager : Singleton<GameManager>
 {
+
+    public string currentGameID;
     public float maxCooldown = 5f;
 
     public int wScore;

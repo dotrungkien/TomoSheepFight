@@ -242,6 +242,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public override async void OnJoinedRoom()
     {
         string gameID = PhotonNetwork.CurrentRoom.Name;
+        GameManager.Instance.currentGameID = gameID;
         string tx = await contract.Play(gameID);
         Debug.LogFormat("play tx: {0}", tx);
         Play(tx);

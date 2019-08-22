@@ -65,10 +65,10 @@ public class SheepContract : MonoBehaviour, IListener
         contract = web3.Eth.GetContract(abi, address);
 
         bool isPlaying = await CheckPlaying();
-        // if (isPlaying)
-        // {
-        //     await EndGame(false);
-        // }
+        if (isPlaying)
+        {
+            await ForceEndGame();
+        }
         GameManager.Instance.PostNotification(EVENT_TYPE.ACCOUNT_READY);
         // gameUI.OnPlay(); // for test directly from play scene
     }
@@ -95,6 +95,15 @@ public class SheepContract : MonoBehaviour, IListener
         var gas = await endgameFunction.EstimateGasAsync(isWon);
         var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null, null, new object[] { gameID, isWon });
         // Debug.Log(string.Format("EndGame tx: {0}", tx));
+        return tx;
+    }
+
+    public async Task<string> ForceEndGame()
+    {
+        var endgameFunction = contract.GetFunction("forceEndGame");
+        var gas = await endgameFunction.EstimateGasAsync();
+        var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null);
+        Debug.Log(string.Format("ForceEndGame tx: {0}", tx));
         return tx;
     }
 
