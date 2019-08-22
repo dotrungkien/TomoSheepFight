@@ -7,7 +7,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 
 
-public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
+public class NetworkManager : MonoBehaviourPunCallbacks
 {
     string gameVersion = "1";
     bool isConnecting;
@@ -22,6 +22,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
     void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.NickName = "SHEEPREAL";
     }
 
     void Start()
@@ -36,7 +37,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
         // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.NickName = "sheep fight origin";
             // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
             PhotonNetwork.JoinRandomRoom();
         }
@@ -65,7 +65,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         // Debug.Log("OnJoinRandomFailed. No random room available, so we create one.");
-        CreateGame("sheep fight origin");
+        CreateGame("SHEEPREAL");
     }
 
     public void CreateGame(string gameID)
@@ -124,8 +124,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void ChangeNext()
     {
-        turn = string.Format("{0} {1}", mockRand.Next() % 5, mockRand.Next() % 5);
-        myTurn.text = string.Format("My Turn: {0}", turn);
+        // turn = string.Format("{0} {1}", mockRand.Next() % 5, mockRand.Next() % 5);
+        // myTurn.text = string.Format("My Turn: {0}", turn);
+        photonView.RPC("SendTurn", RpcTarget.All, mockRand.Next() % 5, mockRand.Next() % 5);
     }
 
     public void ResetText()
@@ -141,19 +142,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             turn = string.Format("{0} {1}", mockRand.Next() % 5, mockRand.Next() % 5);
             myTurn.text = string.Format("My Turn: {0}", turn);
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
         }
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+
+    [PunRPC]
+    void SendTurn(int sheepIndex, int laneIndex, PhotonMessageInfo info)
     {
-        if (stream.IsWriting)
-        {
-            stream.SendNext(turn);
-        }
-        else
-        {
-            otherTurn.text = string.Format("Other Turn: {0}", (string)stream.ReceiveNext());
-        }
+        // the photonView.RPC() call is the same as without the info parameter.
+        // the info.Sender is the player who called the RPC.
+        Debug.Log(string.Format("Info: {0} --- {1} -- {2}", sheepIndex, laneIndex, info.Sender.IsLocal));
     }
 }

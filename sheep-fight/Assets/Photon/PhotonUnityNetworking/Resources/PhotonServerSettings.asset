@@ -32,5 +32,6 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - ChatMessage
   DisableAutoOpenWizard: 1
   ShowSettings: 0
