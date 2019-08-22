@@ -1,18 +1,10 @@
 pragma solidity 0.5.0;
 
 contract SheepFight {
-    struct Battle {
-        string id;
-        address leftPlayer;
-        address rightPlayer;
-        uint result; // 0 - playing, 1 - leftwin, 2 - rightwin
-    }
-
     mapping (address => bool) public isPlaying;
     mapping (address => string) public playerToGame;
 
     uint public betValue = 1 ether;
-    Battle[] public battles;
 
     event StartBattle(address indexed leftPlayer, address indexed rightPlayer);
 

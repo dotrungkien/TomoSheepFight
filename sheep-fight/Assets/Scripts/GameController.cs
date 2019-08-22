@@ -226,6 +226,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public override void OnDisconnected(DisconnectCause cause)
     {
         // Debug.LogWarningFormat("OnDisconnected() with reason {0}", cause);
+        contract.ForceEndGame();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -265,6 +266,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public override void OnLeftRoom()
     {
         Debug.Log("gg, i quit");
+        // endgame here
     }
 
     public void SendTurn(int sheepIndex, int laneIndex)
