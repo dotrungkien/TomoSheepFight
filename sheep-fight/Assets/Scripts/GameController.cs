@@ -117,7 +117,7 @@ public class GameController : MonoBehaviour, IListener
             currentSheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             yield return new WaitForSeconds(coolDown);
             currentSheep.BeSpawned(laneIndex);
-            networkManager.ChangeNext(sheepIndex, laneIndex);
+            networkManager.SendTurn(sheepIndex, laneIndex);
             NextTurn();
         }
         else
@@ -133,7 +133,7 @@ public class GameController : MonoBehaviour, IListener
         {
             Sheep sheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             sheep.BeSpawned(laneIndex);
-            networkManager.ChangeNext(sheepIndex, laneIndex);
+            networkManager.SendTurn(sheepIndex, laneIndex);
         }
         else
         {
