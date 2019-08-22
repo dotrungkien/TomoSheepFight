@@ -31,9 +31,6 @@ public class SheepContract : MonoBehaviour, IListener
     public TextAsset contractABI;
     public TextAsset contractAddress;
 
-    public TextAsset faucetABI;
-    public TextAsset faucetAddress;
-
     public GameUI gameUI;
 
     public Button getFaucetButton;
@@ -47,14 +44,13 @@ public class SheepContract : MonoBehaviour, IListener
     void Start()
     {
         GameManager.Instance.AddListener(EVENT_TYPE.PLAY, this);
-        getFaucetButton.onClick.AddListener(() => ClaimTomo());
+        getFaucetButton.onClick.AddListener(CopyAddress);
         getFaucetButton.gameObject.SetActive(false);
         AccountSetup();
-        GetFaucet();
         GetContract();
     }
 
-    async void AccountSetup()
+    void AccountSetup()
     {
         // var url = "http://localhost:8545";
         var url = "https://testnet.tomochain.com";
@@ -76,28 +72,23 @@ public class SheepContract : MonoBehaviour, IListener
         SetBalance();
     }
 
+    void CopyToClipboard(string s)
+    {
+        TextEditor te = new TextEditor();
+        te.text = s;
+        te.SelectAll();
+        te.Copy();
+    }
+
+    public void CopyAddress()
+    {
+        CopyToClipboard(from);
+    }
+
     async void SetBalance()
     {
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         gameUI.SetBalance(string.Format("{0:0.00} Tomo", Web3.Convert.FromWei(ethBalance.Value)));
-        Debug.LogFormat("Faucet Balance {0} Tomo", await web3.Eth.GetBalance.SendRequestAsync(faucetAddress.ToString()));
-    }
-
-    void GetFaucet()
-    {
-        string abi = faucetABI.ToString();
-        string address = faucetAddress.ToString();
-        faucet = web3.Eth.GetContract(abi, address);
-        getFaucetButton.gameObject.SetActive(true);
-    }
-
-    public async Task<string> ClaimTomo()
-    {
-        var claimFaucet = faucet.GetFunction("claimFaucet");
-        var tx = await claimFaucet.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
-        Debug.Log(string.Format("Claim successfully tx: {0}", tx));
-        SetBalance();
-        return tx;
     }
 
     async void GetContract()
