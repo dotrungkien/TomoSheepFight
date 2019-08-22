@@ -33,7 +33,7 @@ public class SheepContract : MonoBehaviour, IListener
 
     public GameUI gameUI;
 
-    public Button getFaucetButton;
+    public Button copyButton;
 
     public GameController controller;
 
@@ -44,8 +44,7 @@ public class SheepContract : MonoBehaviour, IListener
     void Start()
     {
         GameManager.Instance.AddListener(EVENT_TYPE.PLAY, this);
-        getFaucetButton.onClick.AddListener(CopyAddress);
-        getFaucetButton.gameObject.SetActive(false);
+        copyButton.onClick.AddListener(CopyAddress);
         AccountSetup();
         GetContract();
     }

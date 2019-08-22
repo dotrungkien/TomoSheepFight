@@ -189,7 +189,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
 
     public void CreateGame(string gameID = null)
     {
-        Debug.LogFormat("Create game: {0}", gameID);
         PhotonNetwork.CreateRoom(gameID, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PlayerTtl = 0, EmptyRoomTtl = 0 });
     }
 
@@ -245,7 +244,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         string gameID = PhotonNetwork.CurrentRoom.Name;
         GameManager.Instance.currentGameID = gameID;
         string tx = await contract.Play(gameID);
-        Debug.LogFormat("play tx: {0}", tx);
+        Debug.LogFormat("GameID: {0},  Play tx: {1}", gameID, tx);
         Play(tx);
         if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom) StartGame();
     }
