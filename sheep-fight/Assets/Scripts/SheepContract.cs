@@ -49,9 +49,8 @@ public class SheepContract : MonoBehaviour, IListener
         var ecKey = EthECKey.GenerateKey();
         account = new Account(privateKey);
         web3 = new Web3(account, url);
-        Debug.Log(string.Format("account {0}", account.Address));
+        if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", account.Address);
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
-        Debug.Log(string.Format("ETH balance {0}", Web3.Convert.FromWei(ethBalance.Value)));
         gameUI.SetAccount(account.Address);
         gameUI.SetBalance(string.Format("{0:0.00} ETH", Web3.Convert.FromWei(ethBalance.Value)));
     }

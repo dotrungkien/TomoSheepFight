@@ -36,6 +36,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
         // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.IsConnected)
         {
+            PhotonNetwork.NickName = "sheep fight origin";
             // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
             PhotonNetwork.JoinRandomRoom();
         }
@@ -64,7 +65,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         // Debug.Log("OnJoinRandomFailed. No random room available, so we create one.");
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom });
+        CreateGame("sheep fight origin");
+    }
+
+    public void CreateGame(string gameID)
+    {
+        PhotonNetwork.CreateRoom(gameID, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PlayerTtl = 0, EmptyRoomTtl = 0 });
+    }
+
+    public void LeaveGame()
+    {
+        PhotonNetwork.LeaveRoom();
     }
 
     public override void OnPlayerEnteredRoom(Player other)
@@ -100,11 +111,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnPlayerLeftRoom(Player other)
     {
         Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
-        PhotonNetwork.LeaveRoom();
+        LeaveGame();
     }
 
     public override void OnLeftRoom()
     {
+        Debug.Log("gg, i quit");
         ResetText();
         // SceneManager.LoadScene("PunBasics-Launcher");
         // GameManager.Instance.PostNotification(EVENT_TYPE.GAMEOVER, this, PhotonNetwork.CurrentRoom.Name);
@@ -118,6 +130,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public void ResetText()
     {
+        StopAllCoroutines();
         myTurn.text = "My Turn: NA";
         otherTurn.text = "Other Turn: NA";
     }
