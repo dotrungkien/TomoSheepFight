@@ -8,6 +8,7 @@ contract SheepFaucet {
     {
         require(claimCount[msg.sender] < 3, "maximum claim exceed");
         require(address(this).balance > 5 ether, "insufficient balance");
+        claimCount[msg.sender] += 1;
         msg.sender.transfer(5 ether);
     }
 

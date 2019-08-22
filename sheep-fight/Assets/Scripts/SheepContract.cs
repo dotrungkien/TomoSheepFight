@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
@@ -20,13 +21,22 @@ public class SheepContract : MonoBehaviour, IListener
     // private string privateKey = "0xd18a9a98695fd5976df7e5fceb1c25cccba76a89b0ff72015968350faa5bfac5"; //truffle develop acc 0
     // private string from = "0xcbec9a701072198291dd0b78b1163068b8b22dfe";
     // seed = "exit lens suggest bamboo sniff head sentence focus burger fever prefer benefit";
-    private string privateKey = "0x6e42b17dc5d278edfef336250b0e813f9c61f7fdc8de2ef65f05da1b1014f0b9"; //ganache-cli acc 0
-    private string from = "0x6f759ba46a8a3337e5bd0bb5e615d5107b723249";
+    // private string privateKey = "0x6e42b17dc5d278edfef336250b0e813f9c61f7fdc8de2ef65f05da1b1014f0b9"; //ganache-cli acc 0
+    // private string from = "0x6f759ba46a8a3337e5bd0bb5e615d5107b723249";
+    private string privateKey;
+    private string from;
     private Contract contract;
+    private Contract faucet;
 
     public TextAsset contractABI;
     public TextAsset contractAddress;
+
+    public TextAsset faucetABI;
+    public TextAsset faucetAddress;
+
     public GameUI gameUI;
+
+    public Button getFaucetButton;
 
     public GameController controller;
 
@@ -36,26 +46,58 @@ public class SheepContract : MonoBehaviour, IListener
 
     void Start()
     {
-
-        // var privateKey = ecKey.GetPrivateKey();
-        // var privateKey = "0xF557B67ED7DA128F0B3920072A041C93FC9FB5BCDEA16F73F03D6BB340C3D34A"; //tomo
-
         GameManager.Instance.AddListener(EVENT_TYPE.PLAY, this);
+        getFaucetButton.onClick.AddListener(() => ClaimTomo());
+        getFaucetButton.gameObject.SetActive(false);
         AccountSetup();
+        GetFaucet();
         GetContract();
     }
 
     async void AccountSetup()
     {
-        var url = "http://localhost:8545";
-        var ecKey = EthECKey.GenerateKey();
+        // var url = "http://localhost:8545";
+        var url = "https://testnet.tomochain.com";
+
+        privateKey = PlayerPrefs.GetString("privateKey");
+        if (privateKey == "")
+        {
+            var ecKey = EthECKey.GenerateKey();
+            privateKey = ecKey.GetPrivateKey();
+            PlayerPrefs.SetString("privateKey", privateKey);
+        }
+
         account = new Account(privateKey);
+        from = account.Address;
         web3 = new Web3(account, url);
-        if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", account.Address);
-        controller.SetNickName(account.Address);
+        if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", from);
+        controller.SetNickName(from);
+        gameUI.SetAccount(from);
+        SetBalance();
+    }
+
+    async void SetBalance()
+    {
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
-        gameUI.SetAccount(account.Address);
-        gameUI.SetBalance(string.Format("{0:0.00} ETH", Web3.Convert.FromWei(ethBalance.Value)));
+        gameUI.SetBalance(string.Format("{0:0.00} Tomo", Web3.Convert.FromWei(ethBalance.Value)));
+        Debug.LogFormat("Faucet Balance {0} Tomo", await web3.Eth.GetBalance.SendRequestAsync(faucetAddress.ToString()));
+    }
+
+    void GetFaucet()
+    {
+        string abi = faucetABI.ToString();
+        string address = faucetAddress.ToString();
+        faucet = web3.Eth.GetContract(abi, address);
+        getFaucetButton.gameObject.SetActive(true);
+    }
+
+    public async Task<string> ClaimTomo()
+    {
+        var claimFaucet = faucet.GetFunction("claimFaucet");
+        var tx = await claimFaucet.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
+        Debug.Log(string.Format("Claim successfully tx: {0}", tx));
+        SetBalance();
+        return tx;
     }
 
     async void GetContract()
