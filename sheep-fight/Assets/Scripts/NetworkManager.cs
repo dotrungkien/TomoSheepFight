@@ -13,38 +13,32 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     bool isConnecting;
     private byte maxPlayersPerRoom = 2;
 
-    private string turn;
-    public Text myTurn;
-    public Text otherTurn;
-
     public GameController controller;
-
-    System.Random mockRand = new System.Random();
 
     void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-        PhotonNetwork.NickName = "SHEEPREAL";
     }
 
     void Start()
     {
-        ResetText();
         Connect();
+    }
+
+    public void SetNickName(string nickname)
+    {
+        PhotonNetwork.NickName = nickname;
     }
 
     public void Connect()
     {
         isConnecting = true;
-        // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
         if (PhotonNetwork.IsConnected)
         {
-            // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
             PhotonNetwork.JoinRandomRoom();
         }
         else
         {
-            // #Critical, we must first and foremost connect to Photon Online Server.
             PhotonNetwork.GameVersion = gameVersion;
             PhotonNetwork.ConnectUsingSettings();
         }
@@ -52,11 +46,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        // Debug.Log("OnConnectedToMaster()");
-        if (isConnecting)
-        {
-            PhotonNetwork.JoinRandomRoom();
-        }
+        if (isConnecting) PhotonNetwork.JoinRandomRoom();
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -66,12 +56,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        // Debug.Log("OnJoinRandomFailed. No random room available, so we create one.");
         CreateGame("SHEEPREAL");
     }
 
-    public void CreateGame(string gameID)
+    public void CreateGame(string gameID = null)
     {
+        Debug.LogFormat("Create game: {0}", gameID);
         PhotonNetwork.CreateRoom(gameID, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PlayerTtl = 0, EmptyRoomTtl = 0 });
     }
 
@@ -82,31 +72,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player other)
     {
-        // Debug.Log("OnPlayerEnteredRoom() " + other.NickName); // not seen if you're the player connecting
-
-        // if (PhotonNetwork.IsMasterClient)
-        // {
-        //     Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-        // }
-
         StartGame();
     }
 
     public override void OnJoinedRoom()
     {
-        // Debug.LogFormat("Joined game {0}", PhotonNetwork.CurrentRoom.Name);
-        // // PhotonNetwork.LoadLevel("Room for 1");
-        if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom)
-        {
-            StartGame();
-        }
+        if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom) StartGame();
     }
 
     public void StartGame()
     {
         var players = PhotonNetwork.CurrentRoom.Players;
         Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
-        StartCoroutine(ChangeNext2());
     }
 
 
@@ -119,38 +96,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         Debug.Log("gg, i quit");
-        ResetText();
-        // SceneManager.LoadScene("PunBasics-Launcher");
-        // GameManager.Instance.PostNotification(EVENT_TYPE.GAMEOVER, this, PhotonNetwork.CurrentRoom.Name);
     }
 
-    public void ChangeNext(int sheepIndex, int laneIndex)
+    public void SendTurn(int sheepIndex, int laneIndex)
     {
-        // turn = string.Format("{0} {1}", mockRand.Next() % 5, mockRand.Next() % 5);
-        // myTurn.text = string.Format("My Turn: {0}", turn);
-        photonView.RPC("SendTurn", RpcTarget.All, sheepIndex, laneIndex);
+        photonView.RPC("SendTurnRPC", RpcTarget.All, sheepIndex, laneIndex);
     }
-
-    public void ResetText()
-    {
-        StopAllCoroutines();
-        myTurn.text = "My Turn: NA";
-        otherTurn.text = "Other Turn: NA";
-    }
-
-    IEnumerator ChangeNext2()
-    {
-        while (true)
-        {
-            turn = string.Format("{0} {1}", mockRand.Next() % 5, mockRand.Next() % 5);
-            myTurn.text = string.Format("My Turn: {0}", turn);
-            yield return new WaitForSeconds(2f);
-        }
-    }
-
 
     [PunRPC]
-    void SendTurn(int sheepIndex, int laneIndex, PhotonMessageInfo info)
+    void SendTurnRPC(int sheepIndex, int laneIndex, PhotonMessageInfo info)
     {
         // Debug.Log(string.Format("Info: {0} --- {1} -- {2}", sheepIndex, laneIndex, info.Sender.IsLocal));
         if (!info.Sender.IsLocal) controller.SpawnBlackSheep(sheepIndex, laneIndex);
