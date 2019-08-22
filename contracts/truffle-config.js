@@ -6,7 +6,7 @@ module.exports = {
     development: {
       host: '127.0.0.1',
       port: 8545,
-      network_id: '1564718941781'
+      network_id: '123456'
     },
     tomo: {
       provider: () => new HDWalletProvider(mnemonic, 'https://testnet.tomochain.com', 0, 1, true),

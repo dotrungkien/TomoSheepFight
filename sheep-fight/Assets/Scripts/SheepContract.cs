@@ -28,6 +28,8 @@ public class SheepContract : MonoBehaviour, IListener
     public TextAsset contractAddress;
     public GameUI gameUI;
 
+    public GameController controller;
+
     [HideInInspector]
     public HexBigInteger ethBalance;
     public BigInteger seed;
@@ -50,6 +52,7 @@ public class SheepContract : MonoBehaviour, IListener
         account = new Account(privateKey);
         web3 = new Web3(account, url);
         if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", account.Address);
+        controller.SetNickName(account.Address);
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         gameUI.SetAccount(account.Address);
         gameUI.SetBalance(string.Format("{0:0.00} ETH", Web3.Convert.FromWei(ethBalance.Value)));
@@ -62,10 +65,10 @@ public class SheepContract : MonoBehaviour, IListener
         contract = web3.Eth.GetContract(abi, address);
 
         bool isPlaying = await CheckPlaying();
-        if (isPlaying)
-        {
-            await EndGame(false);
-        }
+        // if (isPlaying)
+        // {
+        //     await EndGame(false);
+        // }
         GameManager.Instance.PostNotification(EVENT_TYPE.ACCOUNT_READY);
         // gameUI.OnPlay(); // for test directly from play scene
     }
@@ -77,20 +80,20 @@ public class SheepContract : MonoBehaviour, IListener
         return isPlaying;
     }
 
-    public async Task<string> Play()
+    public async Task<string> Play(string gameID)
     {
         var playFunction = contract.GetFunction("play");
         // var gas = await playFunction.EstimateGasAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
-        var tx = await playFunction.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
+        var tx = await playFunction.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)), gameID);
         // Debug.Log(string.Format("Play tx: {0}", tx));
         return tx;
     }
 
-    public async Task<string> EndGame(bool isWon)
+    public async Task<string> EndGame(string gameID, bool isWon)
     {
         var endgameFunction = contract.GetFunction("endGame");
         var gas = await endgameFunction.EstimateGasAsync(isWon);
-        var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null, null, isWon);
+        var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null, null, new object[] { gameID, isWon });
         // Debug.Log(string.Format("EndGame tx: {0}", tx));
         return tx;
     }
@@ -100,8 +103,8 @@ public class SheepContract : MonoBehaviour, IListener
         switch (eventType)
         {
             case EVENT_TYPE.PLAY:
-                seed = (new HexBigInteger(await Play())).Value;
-                Debug.Log("seed " + seed.ToString());
+                // seed = (new HexBigInteger(await Play())).Value;
+                // Debug.Log("seed " + seed.ToString());
                 break;
             case EVENT_TYPE.BLACK_FINISH:
                 break;

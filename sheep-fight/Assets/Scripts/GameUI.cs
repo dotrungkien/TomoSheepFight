@@ -59,12 +59,10 @@ public class GameUI : MonoBehaviour, IListener
         balance.text = balanceText;
     }
 
-    public async void OnPlay()
+    public void OnPlay()
     {
         lobby.SetActive(false);
-        // string tx = await contract.Play();
-        // controller.Play(tx);
-        controller.Play("abc");
+        controller.JoinGame();
     }
 
     public async void GameOver(bool isWon)
@@ -72,7 +70,7 @@ public class GameUI : MonoBehaviour, IListener
         gameOverPanel.SetActive(true);
         winText.SetActive(isWon);
         loseText.SetActive(!isWon);
-        await contract.EndGame(isWon);
+        // await contract.EndGame(isWon);
     }
 
     public void ResetGame()

@@ -33,5 +33,7 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - ChatMessage
+  - SendTurn
+  - SendTurnRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
