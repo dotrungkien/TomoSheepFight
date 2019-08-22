@@ -21,6 +21,8 @@ public class GameController : MonoBehaviour, IListener
     public List<int> sheeps;
     public SheepIcon[] icons;
 
+    public NetworkManager networkManager;
+
     private float maxCooldown;
     private Sheep currentSheep = null;
     private System.Random rand;
@@ -52,6 +54,12 @@ public class GameController : MonoBehaviour, IListener
         }
     }
 
+    public void SpawnBlackSheep(int sheepIdx, int laneIdx)
+    {
+        SpawnSheeps(false, sheepIdx, laneIdx);
+        icons[3].SwitchSheep(sheepIdx);
+    }
+
     public void NextTurn()
     {
         sheeps.RemoveAt(0);
@@ -62,12 +70,13 @@ public class GameController : MonoBehaviour, IListener
     public void Play(string tx)
     {
         isPlaying = true;
-        StartCoroutine(MockBlackSheepSpawn());
+        // StartCoroutine(MockBlackSheepSpawn());
         isReady = true;
         coolDown = 0f;
-        var subTx = tx.Substring(0, 8);
-        int seed = Convert.ToInt32(subTx, 16);
-        rand = new System.Random(seed);
+        // var subTx = tx.Substring(0, 8);
+        // int seed = Convert.ToInt32(subTx, 16);
+        // rand = new System.Random(seed);
+        rand = new System.Random();
         sheeps = new List<int>();
         for (int i = 0; i < 100; i++)
         {
@@ -108,6 +117,7 @@ public class GameController : MonoBehaviour, IListener
             currentSheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             yield return new WaitForSeconds(coolDown);
             currentSheep.BeSpawned(laneIndex);
+            networkManager.ChangeNext(sheepIndex, laneIndex);
             NextTurn();
         }
         else
@@ -123,6 +133,7 @@ public class GameController : MonoBehaviour, IListener
         {
             Sheep sheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             sheep.BeSpawned(laneIndex);
+            networkManager.ChangeNext(sheepIndex, laneIndex);
         }
         else
         {

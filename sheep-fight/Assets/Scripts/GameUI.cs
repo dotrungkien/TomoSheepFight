@@ -35,7 +35,7 @@ public class GameUI : MonoBehaviour, IListener
         GameManager.Instance.AddListener(EVENT_TYPE.BLACK_FINISH, this);
         GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
         playButton.onClick.AddListener(OnPlay);
-        playButton.gameObject.SetActive(false);
+        // playButton.gameObject.SetActive(false);
         homeButton.onClick.AddListener(ResetGame);
         gameOverPanel.SetActive(false);
         UpdateScore();
@@ -62,8 +62,9 @@ public class GameUI : MonoBehaviour, IListener
     public async void OnPlay()
     {
         lobby.SetActive(false);
-        string tx = await contract.Play();
-        controller.Play(tx);
+        // string tx = await contract.Play();
+        // controller.Play(tx);
+        controller.Play("abc");
     }
 
     public async void GameOver(bool isWon)

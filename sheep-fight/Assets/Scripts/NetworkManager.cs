@@ -17,6 +17,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Text myTurn;
     public Text otherTurn;
 
+    public GameController controller;
+
     System.Random mockRand = new System.Random();
 
     void Awake()
@@ -122,11 +124,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // GameManager.Instance.PostNotification(EVENT_TYPE.GAMEOVER, this, PhotonNetwork.CurrentRoom.Name);
     }
 
-    public void ChangeNext()
+    public void ChangeNext(int sheepIndex, int laneIndex)
     {
         // turn = string.Format("{0} {1}", mockRand.Next() % 5, mockRand.Next() % 5);
         // myTurn.text = string.Format("My Turn: {0}", turn);
-        photonView.RPC("SendTurn", RpcTarget.All, mockRand.Next() % 5, mockRand.Next() % 5);
+        photonView.RPC("SendTurn", RpcTarget.All, sheepIndex, laneIndex);
     }
 
     public void ResetText()
@@ -150,8 +152,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void SendTurn(int sheepIndex, int laneIndex, PhotonMessageInfo info)
     {
-        // the photonView.RPC() call is the same as without the info parameter.
-        // the info.Sender is the player who called the RPC.
-        Debug.Log(string.Format("Info: {0} --- {1} -- {2}", sheepIndex, laneIndex, info.Sender.IsLocal));
+        // Debug.Log(string.Format("Info: {0} --- {1} -- {2}", sheepIndex, laneIndex, info.Sender.IsLocal));
+        if (!info.Sender.IsLocal) controller.SpawnBlackSheep(sheepIndex, laneIndex);
     }
 }
