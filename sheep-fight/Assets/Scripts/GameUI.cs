@@ -23,6 +23,7 @@ public class GameUI : MonoBehaviour, IListener
     public GameObject gameOverPanel;
     public GameObject winText;
     public GameObject loseText;
+    public GameObject waitPanel;
 
     public GameController controller;
     public SheepContract contract;
@@ -36,7 +37,7 @@ public class GameUI : MonoBehaviour, IListener
         GameManager.Instance.AddListener(EVENT_TYPE.WHITE_FINISH, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLACK_FINISH, this);
         GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
-        playButton.onClick.AddListener(OnPlay);
+        playButton.onClick.AddListener(PlayGame);
         quitButton.onClick.AddListener(QuitGame);
         resetButton.onClick.AddListener(ResetGame);
         gameOverPanel.SetActive(false);
@@ -51,6 +52,16 @@ public class GameUI : MonoBehaviour, IListener
         blackBar.fillAmount = GameManager.Instance.bScore / 100f;
     }
 
+    public void EnableWaiting()
+    {
+        waitPanel.SetActive(true);
+    }
+
+    public void DisableWaiting()
+    {
+        waitPanel.SetActive(false);
+    }
+
     public void SetAccount(string address)
     {
         account.text = address;
@@ -61,9 +72,10 @@ public class GameUI : MonoBehaviour, IListener
         balance.text = balanceText;
     }
 
-    public void OnPlay()
+    public void PlayGame()
     {
         gameMenu.SetActive(true);
+        EnableWaiting();
         lobbyMenu.SetActive(false);
         controller.JoinGame();
     }

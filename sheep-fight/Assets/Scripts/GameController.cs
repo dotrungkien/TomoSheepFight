@@ -8,7 +8,6 @@ using Photon.Realtime;
 
 using UnityEngine;
 
-
 public class GameController : MonoBehaviourPunCallbacks, IListener
 {
     public Sheep[] whiteSheeps;
@@ -25,6 +24,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public SheepIcon[] icons;
 
     public SheepContract contract;
+    public GameUI gameUI;
 
     private float maxCooldown;
     private Sheep currentSheep = null;
@@ -33,6 +33,8 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     string gameVersion = "1";
     bool isConnecting;
     private byte maxPlayersPerRoom = 2;
+
+    private string playTx;
 
     void Awake()
     {
@@ -243,14 +245,15 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     {
         string gameID = PhotonNetwork.CurrentRoom.Name;
         GameManager.Instance.currentGameID = gameID;
-        string tx = await contract.Play(gameID);
-        Debug.LogFormat("GameID: {0},  Play tx: {1}", gameID, tx);
-        Play(tx);
+        playTx = await contract.Play(gameID);
+        Debug.LogFormat("GameID: {0},  Play tx: {1}", gameID, playTx);
         if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom) StartGame();
     }
 
     public void StartGame()
     {
+        Play(playTx);
+        gameUI.DisableWaiting();
         var players = PhotonNetwork.CurrentRoom.Players;
         Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
     }
@@ -265,6 +268,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public override void OnLeftRoom()
     {
         Debug.Log("gg, i quit");
+        playTx = "";
         // endgame here
     }
 
