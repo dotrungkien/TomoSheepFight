@@ -221,6 +221,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public override void OnConnectedToMaster()
     {
         Debug.LogFormat("connected to master");
+
         // if (isConnecting) PhotonNetwork.JoinRandomRoom();
     }
 
@@ -262,6 +263,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public override void OnPlayerLeftRoom(Player other)
     {
         Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
+        gameUI.GameOver(true);
         LeaveGame();
     }
 

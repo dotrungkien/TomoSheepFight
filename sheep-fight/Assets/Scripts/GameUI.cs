@@ -41,6 +41,7 @@ public class GameUI : MonoBehaviour, IListener
         quitButton.onClick.AddListener(QuitGame);
         resetButton.onClick.AddListener(ResetGame);
         gameOverPanel.SetActive(false);
+        DisablePlay();
         UpdateScore();
     }
 
@@ -50,6 +51,16 @@ public class GameUI : MonoBehaviour, IListener
         whiteBar.fillAmount = GameManager.Instance.wScore / 100f;
         bScore.text = "" + GameManager.Instance.bScore;
         blackBar.fillAmount = GameManager.Instance.bScore / 100f;
+    }
+
+    public void EnablePlay()
+    {
+        playButton.gameObject.SetActive(true);
+    }
+
+    public void DisablePlay()
+    {
+        playButton.gameObject.SetActive(false);
     }
 
     public void EnableWaiting()
@@ -82,6 +93,7 @@ public class GameUI : MonoBehaviour, IListener
 
     public async void QuitGame()
     {
+        ResetGame();
         lobbyMenu.gameObject.SetActive(true);
         gameMenu.gameObject.SetActive(false);
         await contract.ForceEndGame();
