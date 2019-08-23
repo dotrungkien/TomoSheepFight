@@ -13,6 +13,8 @@ public class GameUI : MonoBehaviour, IListener
     public Image blackBar;
     public Text bScore;
     public Text account;
+    public Text localPlayer;
+    public Text otherPlayer;
     public Text balance;
 
     public Button playButton;
@@ -85,9 +87,17 @@ public class GameUI : MonoBehaviour, IListener
         waitPanel.SetActive(false);
     }
 
-    public void SetAccount(string address)
+    public void SetAccount(string address, bool isLocal = true)
     {
-        account.text = address;
+        if (isLocal)
+        {
+            account.text = address;
+            localPlayer.text = address;
+        }
+        else
+        {
+            otherPlayer.text = address;
+        }
     }
 
     public void SetBalance(string balanceText)

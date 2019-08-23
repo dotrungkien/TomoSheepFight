@@ -256,7 +256,9 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         Play(playTx);
         gameUI.DisableWaiting();
         var players = PhotonNetwork.CurrentRoom.Players;
-        Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
+        // Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
+        if (!players[1].IsLocal) gameUI.SetAccount(players[1].NickName, false);
+        else gameUI.SetAccount(players[2].NickName, false);
     }
 
 
