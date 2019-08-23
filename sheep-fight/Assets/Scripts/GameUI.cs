@@ -108,35 +108,37 @@ public class GameUI : MonoBehaviour, IListener
 
     public void PlayGame()
     {
+        EnableLoading();
+        controller.JoinGame();
+    }
+
+    public void PlayConfirmed()
+    {
         gameMenu.SetActive(true);
         EnableWaiting();
         exitPanel.SetActive(false);
         lobbyMenu.SetActive(false);
-        controller.JoinGame();
     }
 
     public async void QuitGame()
     {
-        ResetGame();
-        GameManager.Instance.ResetGame();
-        lobbyMenu.gameObject.SetActive(true);
-        gameMenu.gameObject.SetActive(false);
         controller.LeaveGame();
+        ResetGame();
         await contract.ForceEndGame();
         await contract.SetBalance();
     }
 
-    public async void GameOver(bool isWon)
+    public void GameOver(bool isWon)
     {
         gameOverPanel.SetActive(true);
         winText.SetActive(isWon);
         loseText.SetActive(!isWon);
-        // await contract.EndGame(isWon);
     }
 
     public void ResetGame()
     {
         gameOverPanel.SetActive(false);
+        gameMenu.gameObject.SetActive(false);
         lobbyMenu.SetActive(true);
         GameManager.Instance.ResetGame();
     }

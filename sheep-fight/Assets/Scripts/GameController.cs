@@ -150,7 +150,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         else
         {
             Sheep sheep = Instantiate<Sheep>(blackSheeps[sheepIndex], bSpawnPositions[laneIndex].position, Quaternion.identity, bSpawnPositions[laneIndex]);
-            // sheep.direction = -1;
             sheep.BeSpawned(laneIndex);
         }
 
@@ -268,7 +267,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
 
     public override void OnLeftRoom()
     {
-        Debug.Log("gg, i quit");
+        // Debug.Log("gg, i quit");
         playTx = "";
         // endgame here
     }

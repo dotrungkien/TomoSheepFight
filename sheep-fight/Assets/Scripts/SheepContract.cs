@@ -119,9 +119,9 @@ public class SheepContract : MonoBehaviour, IListener
     {
         bool isPlaying = await CheckPlaying();
         if (isPlaying) await ForceEndGame();
-        gameUI.EnableLoading();
         var receipt = await playFunction.SendTransactionAndWaitForReceiptAsync(from, gas, betValue, null, gameID);
         gameUI.DisableLoading();
+        gameUI.PlayConfirmed();
         // Debug.Log(string.Format("Play tx: {0}", tx));
         return receipt.TransactionHash;
     }

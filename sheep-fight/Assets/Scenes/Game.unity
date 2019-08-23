@@ -2620,8 +2620,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentGameID: 
   maxCooldown: 5
-  wScore: 100
-  bScore: 100
+  wScore: 10
+  bScore: 10
   bWeights: 0000000000000000000000000000000000000000
   wWeights: 0000000000000000000000000000000000000000
 --- !u!4 &559792991

@@ -24,7 +24,6 @@ public interface IListener
 
 public class GameManager : Singleton<GameManager>
 {
-
     public string currentGameID;
     public float maxCooldown = 5f;
 
@@ -38,13 +37,15 @@ public class GameManager : Singleton<GameManager>
 
     public void ResetGame()
     {
-        wScore = 100;
-        bScore = 100;
+        wScore = 10;
+        bScore = 10;
         for (int i = 0; i < bWeights.Length; i++)
         {
             bWeights[i] = 0;
             wWeights[i] = 0;
         }
+        GameObject[] sheeps = GameObject.FindGameObjectsWithTag("Sheep");
+        foreach (GameObject sheep in sheeps) Destroy(sheep);
     }
 
     public Vector3 LaneVelocity(int laneIndex)
