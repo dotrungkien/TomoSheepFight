@@ -61,7 +61,7 @@ contract SheepFight {
         returns (uint)
     {
         Game memory newGame = Game(gameID, msg.sender, address(0), 0);
-        uint latestGame = games.push(newGame);
+        uint latestGame = games.push(newGame) - 1;
         playerToGame[msg.sender] = latestGame;
         return latestGame;
     }
