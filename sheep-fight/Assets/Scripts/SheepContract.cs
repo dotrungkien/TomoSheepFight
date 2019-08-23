@@ -130,6 +130,8 @@ public class SheepContract : MonoBehaviour, IListener
 
     public async Task<string> ForceEndGame()
     {
+        bool isPlaying = await CheckPlaying();
+        if (!isPlaying) return "Not in game, just quit";
         var forceEndFunc = contract.GetFunction("forceEndGame");
         var gas = await forceEndFunc.EstimateGasAsync();
         var tx = await forceEndFunc.SendTransactionAsync(from, gas, null);
