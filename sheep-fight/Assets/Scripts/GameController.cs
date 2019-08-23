@@ -85,15 +85,13 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public void Play(string tx)
     {
         isPlaying = true;
-        // StartCoroutine(MockBlackSheepSpawn());
         isReady = true;
         coolDown = 0f;
-        // var subTx = tx.Substring(0, 8);
-        // int seed = Convert.ToInt32(subTx, 16);
-        // rand = new System.Random(seed);
-        rand = new System.Random();
+        var subTx = tx.Substring(0, 8);
+        int seed = Convert.ToInt32(subTx, 16);
+        rand = new System.Random(seed);
         sheeps = new List<int>();
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 200; i++)
         {
             sheeps.Add(rand.Next() % 5);
         }
@@ -115,7 +113,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
             {
                 coolDown = 0.0f;
                 isReady = true;
-                // AddNewSheep();
             }
         }
     }

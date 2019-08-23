@@ -25,6 +25,7 @@ public class GameUI : MonoBehaviour, IListener
     public GameObject winText;
     public GameObject loseText;
     public GameObject waitPanel;
+    public GameObject exitPanel;
 
     public GameController controller;
     public SheepContract contract;
@@ -109,6 +110,7 @@ public class GameUI : MonoBehaviour, IListener
     {
         gameMenu.SetActive(true);
         EnableWaiting();
+        exitPanel.SetActive(false);
         lobbyMenu.SetActive(false);
         controller.JoinGame();
     }
@@ -116,8 +118,10 @@ public class GameUI : MonoBehaviour, IListener
     public async void QuitGame()
     {
         ResetGame();
+        GameManager.Instance.ResetGame();
         lobbyMenu.gameObject.SetActive(true);
         gameMenu.gameObject.SetActive(false);
+        controller.LeaveGame();
         await contract.ForceEndGame();
         await contract.SetBalance();
     }

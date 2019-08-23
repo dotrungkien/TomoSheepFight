@@ -3179,6 +3179,7 @@ MonoBehaviour:
   winText: {fileID: 47125110}
   loseText: {fileID: 1438958684}
   waitPanel: {fileID: 1066753858}
+  exitPanel: {fileID: 2134950056}
   controller: {fileID: 1068698413}
   contract: {fileID: 1041407449}
   lobbyMenu: {fileID: 1406537447}
