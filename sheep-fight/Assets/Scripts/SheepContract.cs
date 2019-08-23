@@ -42,34 +42,17 @@ public class SheepContract : MonoBehaviour, IListener
     private HexBigInteger gas = new HexBigInteger(900000);
     private HexBigInteger betValue = new HexBigInteger(Web3.Convert.ToWei(1));
 
+    private Function checkPlaying;
+    private Function playFunction;
+    private Function forceEndFunction;
+    private Function winGameFunction;
+
     void Start()
     {
         GameManager.Instance.AddListener(EVENT_TYPE.PLAY, this);
         copyButton.onClick.AddListener(CopyAddress);
         AccountSetup();
         GetContract();
-    }
-
-    async void AccountSetup()
-    {
-        // var url = "http://localhost:8545";
-        var url = "https://testnet.tomochain.com";
-
-        privateKey = PlayerPrefs.GetString("privateKey");
-        if (privateKey == "")
-        {
-            var ecKey = EthECKey.GenerateKey();
-            privateKey = ecKey.GetPrivateKey();
-            PlayerPrefs.SetString("privateKey", privateKey);
-        }
-
-        account = new Account(privateKey);
-        from = account.Address;
-        web3 = new Web3(account, url);
-        if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", from);
-        controller.SetNickName(from);
-        gameUI.SetAccount(from);
-        await SetBalance();
     }
 
     void CopyToClipboard(string s)
@@ -85,6 +68,27 @@ public class SheepContract : MonoBehaviour, IListener
         CopyToClipboard(from);
     }
 
+    async void AccountSetup()
+    {
+        // var url = "http://localhost:8545";
+        var url = "https://testnet.tomochain.com";
+
+        privateKey = PlayerPrefs.GetString("privateKey");
+        if (privateKey == "")
+        {
+            var ecKey = EthECKey.GenerateKey();
+            privateKey = ecKey.GetPrivateKey();
+            PlayerPrefs.SetString("privateKey", privateKey);
+        }
+        account = new Account(privateKey);
+        from = account.Address;
+        web3 = new Web3(account, url);
+        if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", from);
+        controller.SetNickName(from);
+        gameUI.SetAccount(from);
+        await SetBalance();
+    }
+
     public async Task SetBalance()
     {
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
@@ -92,56 +96,60 @@ public class SheepContract : MonoBehaviour, IListener
         gameUI.EnablePlay();
     }
 
-    async void GetContract()
+    void GetContract()
     {
         string abi = contractABI.ToString();
         string address = contractAddress.ToString();
         contract = web3.Eth.GetContract(abi, address);
-
-        bool isPlaying = await CheckPlaying();
-        if (isPlaying)
-        {
-            await ForceEndGame();
-        }
-        GameManager.Instance.PostNotification(EVENT_TYPE.ACCOUNT_READY);
+        // GameManager.Instance.PostNotification(EVENT_TYPE.ACCOUNT_READY);
+        checkPlaying = contract.GetFunction("isPlaying");
+        playFunction = contract.GetFunction("play");
+        winGameFunction = contract.GetFunction("winGame");
+        forceEndFunction = contract.GetFunction("forceEndGame");
     }
 
     public async Task<bool> CheckPlaying()
     {
-        var checkPlaying = contract.GetFunction("isPlaying");
+
         var isPlaying = await checkPlaying.CallAsync<bool>(from);
         return isPlaying;
     }
 
     public async Task<string> Play(string gameID)
     {
-        var playFunction = contract.GetFunction("play");
-        var tx = await playFunction.SendTransactionAsync(from, gas, betValue, gameID);
+        bool isPlaying = await CheckPlaying();
+        if (isPlaying) await ForceEndGame();
+        gameUI.EnableLoading();
+        var receipt = await playFunction.SendTransactionAndWaitForReceiptAsync(from, gas, betValue, null, gameID);
+        gameUI.DisableLoading();
         // Debug.Log(string.Format("Play tx: {0}", tx));
-        return tx;
+        return receipt.TransactionHash;
     }
 
     public async Task<string> WinGame()
     {
-        var endgameFunction = contract.GetFunction("winGame");
-        var tx = await endgameFunction.SendTransactionAsync(from, gas, null);
-        Debug.Log(string.Format("WinGame tx: {0}", tx));
-        return tx;
+        gameUI.EnableLoading();
+        var receipt = await winGameFunction.SendTransactionAndWaitForReceiptAsync(from, gas, null);
+        gameUI.DisableLoading();
+        Debug.Log(string.Format("WinGame tx: {0}", receipt.TransactionHash));
+        return receipt.TransactionHash;
     }
 
     public async Task<string> ForceEndGame()
     {
         bool isPlaying = await CheckPlaying();
-        Debug.LogFormat("isPlaying = {0}", isPlaying);
-        if (!isPlaying) return "Not in game, just quit";
-        var forceEndFunc = contract.GetFunction("forceEndGame");
-        var gas = await forceEndFunc.EstimateGasAsync();
-        var tx = await forceEndFunc.SendTransactionAsync(from, gas, null);
-        Debug.Log(string.Format("ForceEndGame tx: {0}", tx));
-        isPlaying = await CheckPlaying();
-        Debug.LogFormat("isPlaying = {0}", isPlaying);
-        return tx;
+        if (!isPlaying)
+        {
+            Debug.Log("Not in game, just quit");
+            return "";
+        }
+        gameUI.EnableLoading();
+        var receipt = await forceEndFunction.SendTransactionAndWaitForReceiptAsync(from, gas, null);
+        gameUI.DisableLoading();
+        Debug.Log(string.Format("ForceEndGame tx: {0}", receipt.TransactionHash));
+        return receipt.TransactionHash;
     }
+
 
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
     {

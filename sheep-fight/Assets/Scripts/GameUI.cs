@@ -15,7 +15,6 @@ public class GameUI : MonoBehaviour, IListener
     public Text account;
     public Text balance;
 
-
     public Button playButton;
     public Button resetButton;
     public Button quitButton;
@@ -31,6 +30,8 @@ public class GameUI : MonoBehaviour, IListener
     public GameObject lobbyMenu;
     public GameObject gameMenu;
 
+    public GameObject loading;
+
     void Start()
     {
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
@@ -42,6 +43,7 @@ public class GameUI : MonoBehaviour, IListener
         resetButton.onClick.AddListener(ResetGame);
         gameOverPanel.SetActive(false);
         DisablePlay();
+        DisableLoading();
         UpdateScore();
     }
 
@@ -51,6 +53,16 @@ public class GameUI : MonoBehaviour, IListener
         whiteBar.fillAmount = GameManager.Instance.wScore / 100f;
         bScore.text = "" + GameManager.Instance.bScore;
         blackBar.fillAmount = GameManager.Instance.bScore / 100f;
+    }
+
+    public void EnableLoading()
+    {
+        loading.gameObject.SetActive(true);
+    }
+
+    public void DisableLoading()
+    {
+        loading.gameObject.SetActive(false);
     }
 
     public void EnablePlay()
@@ -120,7 +132,7 @@ public class GameUI : MonoBehaviour, IListener
         switch (eventType)
         {
             case EVENT_TYPE.ACCOUNT_READY:
-                playButton.gameObject.SetActive(true);
+                // playButton.gameObject.SetActive(true);
                 break;
             case EVENT_TYPE.WHITE_FINISH:
                 UpdateScore();
