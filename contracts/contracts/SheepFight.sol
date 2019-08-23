@@ -49,14 +49,14 @@ contract SheepFight {
         isPlaying[msg.sender] = true;
         uint gameIdx = searchGame(gameID);
         if (gameIdx == 0) {
-            CreateGame(gameID);
+            createGame(gameID);
         } else {
-            JoinGame(gameIdx);
+            joinGame(gameIdx);
         }
         if (msg.value > betValue) msg.sender.transfer(msg.value - betValue);
     }
 
-    function CreateGame(string memory gameID)
+    function createGame(string memory gameID)
         internal
         returns (uint)
     {
@@ -66,7 +66,7 @@ contract SheepFight {
         return latestGame;
     }
 
-    function JoinGame(uint gameIdx)
+    function joinGame(uint gameIdx)
         internal
     {
         Game storage game = games[gameIdx];

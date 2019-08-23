@@ -18,8 +18,6 @@ public class SheepContract : MonoBehaviour, IListener
 {
     private Account account;
     private Web3 web3;
-    // private string privateKey = "0xd18a9a98695fd5976df7e5fceb1c25cccba76a89b0ff72015968350faa5bfac5"; //truffle develop acc 0
-    // private string from = "0xcbec9a701072198291dd0b78b1163068b8b22dfe";
     // seed = "exit lens suggest bamboo sniff head sentence focus burger fever prefer benefit";
     // private string privateKey = "0x6e42b17dc5d278edfef336250b0e813f9c61f7fdc8de2ef65f05da1b1014f0b9"; //ganache-cli acc 0
     // private string from = "0x6f759ba46a8a3337e5bd0bb5e615d5107b723249";
@@ -40,6 +38,9 @@ public class SheepContract : MonoBehaviour, IListener
     [HideInInspector]
     public HexBigInteger ethBalance;
     public BigInteger seed;
+
+    private HexBigInteger gas = new HexBigInteger(900000);
+    private HexBigInteger betValue = new HexBigInteger(Web3.Convert.ToWei(1));
 
     void Start()
     {
@@ -102,7 +103,6 @@ public class SheepContract : MonoBehaviour, IListener
             await ForceEndGame();
         }
         GameManager.Instance.PostNotification(EVENT_TYPE.ACCOUNT_READY);
-        // gameUI.OnPlay(); // for test directly from play scene
     }
 
     public async Task<bool> CheckPlaying()
@@ -115,31 +115,29 @@ public class SheepContract : MonoBehaviour, IListener
     public async Task<string> Play(string gameID)
     {
         var playFunction = contract.GetFunction("play");
-        // var gas = await playFunction.EstimateGasAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)));
-        var tx = await playFunction.SendTransactionAsync(from, new HexBigInteger(900000), new HexBigInteger(Web3.Convert.ToWei(1)), gameID);
-        // Debug.Log(string.Format("Play tx: {0}", tx));
+        var tx = await playFunction.SendTransactionAsync(from, gas, betValue, gameID);
+        Debug.Log(string.Format("Play tx: {0}", tx));
         return tx;
     }
 
-    public async Task<string> EndGame(string gameID, bool isWon)
+    public async Task<string> WinGame()
     {
-        var endgameFunction = contract.GetFunction("endGame");
-        var gas = await endgameFunction.EstimateGasAsync(isWon);
-        var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null, null, new object[] { gameID, isWon });
-        // Debug.Log(string.Format("EndGame tx: {0}", tx));
+        var endgameFunction = contract.GetFunction("winGame");
+        var tx = await endgameFunction.SendTransactionAsync(from, gas, null);
+        Debug.Log(string.Format("WinGame tx: {0}", tx));
         return tx;
     }
 
     public async Task<string> ForceEndGame()
     {
-        var endgameFunction = contract.GetFunction("forceEndGame");
-        var gas = await endgameFunction.EstimateGasAsync();
-        var tx = await endgameFunction.SendTransactionAsync(from, new HexBigInteger(900000), null);
+        var forceEndFunc = contract.GetFunction("forceEndGame");
+        var gas = await forceEndFunc.EstimateGasAsync();
+        var tx = await forceEndFunc.SendTransactionAsync(from, gas, null);
         Debug.Log(string.Format("ForceEndGame tx: {0}", tx));
         return tx;
     }
 
-    public async void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
+    public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
     {
         switch (eventType)
         {
