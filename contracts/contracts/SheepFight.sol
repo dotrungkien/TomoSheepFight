@@ -112,6 +112,8 @@ contract SheepFight {
     {
         uint gameIdx = playerToGame[msg.sender];
         if (gameIdx == 0) return;
+        isPlaying[msg.sender] = false;
+        playerToGame[msg.sender] = 0;
         Game storage game = games[gameIdx];
         address leftPlayer = game.leftPlayer;
         if (leftPlayer != address(0)) {

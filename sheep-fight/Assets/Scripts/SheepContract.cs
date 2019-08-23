@@ -50,7 +50,7 @@ public class SheepContract : MonoBehaviour, IListener
         GetContract();
     }
 
-    void AccountSetup()
+    async void AccountSetup()
     {
         // var url = "http://localhost:8545";
         var url = "https://testnet.tomochain.com";
@@ -69,7 +69,7 @@ public class SheepContract : MonoBehaviour, IListener
         if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", from);
         controller.SetNickName(from);
         gameUI.SetAccount(from);
-        SetBalance();
+        await SetBalance();
     }
 
     void CopyToClipboard(string s)
@@ -117,7 +117,7 @@ public class SheepContract : MonoBehaviour, IListener
     {
         var playFunction = contract.GetFunction("play");
         var tx = await playFunction.SendTransactionAsync(from, gas, betValue, gameID);
-        Debug.Log(string.Format("Play tx: {0}", tx));
+        // Debug.Log(string.Format("Play tx: {0}", tx));
         return tx;
     }
 
@@ -132,11 +132,14 @@ public class SheepContract : MonoBehaviour, IListener
     public async Task<string> ForceEndGame()
     {
         bool isPlaying = await CheckPlaying();
+        Debug.LogFormat("isPlaying = {0}", isPlaying);
         if (!isPlaying) return "Not in game, just quit";
         var forceEndFunc = contract.GetFunction("forceEndGame");
         var gas = await forceEndFunc.EstimateGasAsync();
         var tx = await forceEndFunc.SendTransactionAsync(from, gas, null);
         Debug.Log(string.Format("ForceEndGame tx: {0}", tx));
+        isPlaying = await CheckPlaying();
+        Debug.LogFormat("isPlaying = {0}", isPlaying);
         return tx;
     }
 
@@ -153,5 +156,10 @@ public class SheepContract : MonoBehaviour, IListener
             default:
                 break;
         }
+    }
+
+    private async void OnApplicationQuit()
+    {
+        await ForceEndGame();
     }
 }

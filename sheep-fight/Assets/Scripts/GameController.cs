@@ -225,10 +225,10 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         // if (isConnecting) PhotonNetwork.JoinRandomRoom();
     }
 
-    public override void OnDisconnected(DisconnectCause cause)
+    public override async void OnDisconnected(DisconnectCause cause)
     {
         // Debug.LogWarningFormat("OnDisconnected() with reason {0}", cause);
-        contract.ForceEndGame();
+        await contract.ForceEndGame();
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
