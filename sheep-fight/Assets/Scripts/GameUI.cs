@@ -68,11 +68,12 @@ public class GameUI : MonoBehaviour, IListener
         controller.JoinGame();
     }
 
-    public void QuitGame()
+    public async void QuitGame()
     {
         lobbyMenu.gameObject.SetActive(true);
         gameMenu.gameObject.SetActive(false);
-        contract.ForceEndGame();
+        await contract.ForceEndGame();
+        await contract.SetBalance();
     }
 
     public async void GameOver(bool isWon)

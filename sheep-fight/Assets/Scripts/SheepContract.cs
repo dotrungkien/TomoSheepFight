@@ -85,7 +85,7 @@ public class SheepContract : MonoBehaviour, IListener
         CopyToClipboard(from);
     }
 
-    async void SetBalance()
+    public async Task SetBalance()
     {
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         gameUI.SetBalance(string.Format("{0:0.00} Tomo", Web3.Convert.FromWei(ethBalance.Value)));
