@@ -18,6 +18,7 @@ public class GameUI : MonoBehaviour, IListener
     public Text balance;
 
     public Button playButton;
+    public GameObject insufficientBalance;
     public Button resetButton;
     public Button quitButton;
 
@@ -56,6 +57,7 @@ public class GameUI : MonoBehaviour, IListener
         quitButton.onClick.AddListener(QuitGame);
         resetButton.onClick.AddListener(ResetGame);
         gameOverPanel.SetActive(false);
+        insufficientBalance.SetActive(false);
         DisablePlay();
         DisableLoading();
         UpdateScore();
@@ -81,7 +83,13 @@ public class GameUI : MonoBehaviour, IListener
 
     public void EnablePlay()
     {
+        insufficientBalance.SetActive(false);
         playButton.gameObject.SetActive(true);
+    }
+
+    public void InsufficientBalance()
+    {
+        insufficientBalance.SetActive(true);
     }
 
     public void DisablePlay()

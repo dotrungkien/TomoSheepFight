@@ -92,8 +92,18 @@ public class SheepContract : MonoBehaviour, IListener
     public async Task SetBalance()
     {
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
-        gameUI.SetBalance(string.Format("{0:0.00} Tomo", Web3.Convert.FromWei(ethBalance.Value)));
-        gameUI.EnablePlay();
+        decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
+        if (ethBalanceVal > 1)
+        {
+            gameUI.SetBalance(string.Format("{0:0.00} Tomo", ethBalanceVal));
+            gameUI.EnablePlay();
+        }
+        else
+        {
+            gameUI.InsufficientBalance();
+            gameUI.DisablePlay();
+        }
+
     }
 
     void GetContract()
