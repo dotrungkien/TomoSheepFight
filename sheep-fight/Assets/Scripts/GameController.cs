@@ -127,13 +127,14 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         {
             currentSheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             yield return new WaitForSeconds(coolDown);
-            currentSheep.BeSpawned(laneIndex);
-            SendTurn(sheepIndex, laneIndex);
+            currentSheep.BeSpawned(currentSheep.laneIndex);
+            SendTurn(sheepIndex, currentSheep.laneIndex);
             NextTurn();
         }
         else
         {
             currentSheep.transform.position = wSpawnPositions[laneIndex].position;
+            currentSheep.laneIndex = laneIndex;
         }
     }
 
@@ -150,7 +151,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
             Sheep sheep = Instantiate<Sheep>(blackSheeps[sheepIndex], bSpawnPositions[laneIndex].position, Quaternion.identity, bSpawnPositions[laneIndex]);
             sheep.BeSpawned(laneIndex);
         }
-
     }
 
     public void ResetCooldown()
@@ -198,7 +198,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public void LeaveGame()
     {
         Debug.Log("===================== Leave Game =====================");
-        PhotonNetwork.LeaveRoom();
+        if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
     }
 
     public void Connect()

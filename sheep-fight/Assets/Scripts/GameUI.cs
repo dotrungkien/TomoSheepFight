@@ -128,6 +128,7 @@ public class GameUI : MonoBehaviour, IListener
     public void PlayGame()
     {
         EnableLoading();
+        GameManager.Instance.ResetGame();
         controller.JoinGame();
     }
 
