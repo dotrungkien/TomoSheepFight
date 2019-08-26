@@ -126,6 +126,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         if (currentSheep == null)
         {
             currentSheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
+            currentSheep.laneIndex = laneIndex;
             yield return new WaitForSeconds(coolDown);
             currentSheep.BeSpawned(currentSheep.laneIndex);
             SendTurn(sheepIndex, currentSheep.laneIndex);
