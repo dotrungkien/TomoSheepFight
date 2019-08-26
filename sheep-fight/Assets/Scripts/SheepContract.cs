@@ -86,16 +86,27 @@ public class SheepContract : MonoBehaviour, IListener
         if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", from);
         controller.SetNickName(from);
         gameUI.SetAccount(from);
-        await SetBalance();
+        // await SetBalance();
+        StartCoroutine(BalanceInterval());
+    }
+
+    IEnumerator BalanceInterval()
+    {
+        while (true)
+        {
+            SetBalance();
+            yield return new WaitForSeconds(3f);
+        }
+
     }
 
     public async Task SetBalance()
     {
         ethBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
+        gameUI.SetBalance(string.Format("{0:0.00} Tomo", ethBalanceVal));
         if (ethBalanceVal > 1)
         {
-            gameUI.SetBalance(string.Format("{0:0.00} Tomo", ethBalanceVal));
             gameUI.EnablePlay();
         }
         else

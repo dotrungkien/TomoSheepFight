@@ -260,7 +260,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public override void OnPlayerLeftRoom(Player other)
     {
         Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
-        gameUI.GameOver(true);
+        if (isPlaying) gameUI.GameOver(true);
         LeaveGame();
     }
 
