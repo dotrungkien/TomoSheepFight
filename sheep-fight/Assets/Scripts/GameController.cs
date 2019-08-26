@@ -216,9 +216,8 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
 
     public override void OnConnectedToMaster()
     {
-        Debug.LogFormat("connected to master");
-
-        // if (isConnecting) PhotonNetwork.JoinRandomRoom();
+        Debug.LogFormat("Connected to master");
+        Debug.LogFormat("Room count = {0}", PhotonNetwork.CountOfRooms);
     }
 
     public override async void OnDisconnected(DisconnectCause cause)
