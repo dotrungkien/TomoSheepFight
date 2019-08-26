@@ -160,6 +160,7 @@ public class GameUI : MonoBehaviour, IListener
         gameOverPanel.SetActive(false);
         gameMenu.gameObject.SetActive(false);
         lobbyMenu.SetActive(true);
+        controller.LeaveGame();
     }
 
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)

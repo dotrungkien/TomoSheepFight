@@ -44,7 +44,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     {
         maxCooldown = GameManager.Instance.maxCooldown;
         GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
-        StartCoroutine(Connect());
+        Connect();
     }
 
     public void UpdateIcons()
@@ -192,11 +192,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public void JoinGame()
     {
         Debug.Log("===================== Join Game =====================");
-        if (!PhotonNetwork.IsConnected)
-        {
-            Debug.LogError("Photon not Connected. Please try again!");
-            return;
-        }
         PhotonNetwork.JoinRandomRoom();
     }
 
@@ -206,25 +201,18 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         PhotonNetwork.LeaveRoom();
     }
 
-    IEnumerator Connect()
+    public void Connect()
     {
-        while (true)
+        if (!PhotonNetwork.IsConnected)
         {
-            if (PhotonNetwork.IsConnected) yield return new WaitForSeconds(3f);
-            else
-            {
-                PhotonNetwork.GameVersion = gameVersion;
-                PhotonNetwork.ConnectUsingSettings();
-                yield return new WaitForSeconds(3f);
-            }
+            PhotonNetwork.GameVersion = gameVersion;
+            PhotonNetwork.ConnectUsingSettings();
         }
-
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.LogFormat("Connected to master");
-        Debug.LogFormat("Room count = {0}", PhotonNetwork.CountOfRooms);
+        Debug.LogFormat("Connected to master, Room count = {0}", PhotonNetwork.CountOfRooms);
     }
 
     public override async void OnDisconnected(DisconnectCause cause)
