@@ -46,6 +46,7 @@ public class SheepContract : MonoBehaviour, IListener
     private Function playFunction;
     private Function forceEndFunction;
     private Function winGameFunction;
+    private Function loseGameFunction;
 
     void Start()
     {
@@ -126,6 +127,7 @@ public class SheepContract : MonoBehaviour, IListener
         checkPlaying = contract.GetFunction("isPlaying");
         playFunction = contract.GetFunction("play");
         winGameFunction = contract.GetFunction("winGame");
+        loseGameFunction = contract.GetFunction("loseGame");
         forceEndFunction = contract.GetFunction("forceEndGame");
     }
 
@@ -153,6 +155,15 @@ public class SheepContract : MonoBehaviour, IListener
         var receipt = await winGameFunction.SendTransactionAndWaitForReceiptAsync(from, gas, null);
         gameUI.DisableLoading();
         Debug.Log(string.Format("WinGame tx: {0}", receipt.TransactionHash));
+        return receipt.TransactionHash;
+    }
+
+    public async Task<string> LoseGame()
+    {
+        gameUI.EnableLoading();
+        var receipt = await loseGameFunction.SendTransactionAndWaitForReceiptAsync(from, gas, null);
+        gameUI.DisableLoading();
+        Debug.Log(string.Format("LoseGame tx: {0}", receipt.TransactionHash));
         return receipt.TransactionHash;
     }
 

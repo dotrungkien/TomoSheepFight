@@ -22,7 +22,7 @@ public interface IListener
 }
 
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : Singleton<GameManager>, IListener
 {
     public string currentGameID;
     public float maxCooldown = 5f;
@@ -34,6 +34,11 @@ public class GameManager : Singleton<GameManager>
     public int[] wWeights;
 
     private Dictionary<EVENT_TYPE, List<IListener>> listeners = new Dictionary<EVENT_TYPE, List<IListener>>();
+
+    void Start()
+    {
+        AddListener(EVENT_TYPE.GAMEOVER, this);
+    }
 
     public void ResetGame()
     {
@@ -129,5 +134,17 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         RemoveRedundancies();
+    }
+
+    public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
+    {
+        switch (eventType)
+        {
+            case EVENT_TYPE.GAMEOVER:
+                ResetGame();
+                break;
+            default:
+                break;
+        }
     }
 }

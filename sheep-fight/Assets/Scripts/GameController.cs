@@ -31,7 +31,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     private System.Random rand;
 
     string gameVersion = "1";
-    bool isConnecting;
     private byte maxPlayersPerRoom = 2;
 
     private string playTx;
@@ -45,7 +44,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     {
         maxCooldown = GameManager.Instance.maxCooldown;
         GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
-        Connect();
+        StartCoroutine(Connect());
     }
 
     public void UpdateIcons()
@@ -138,7 +137,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         }
     }
 
-
     void SpawnSheeps(bool isWhite, int sheepIndex, int laneIndex)
     {
         if (isWhite)
@@ -194,6 +192,11 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public void JoinGame()
     {
         Debug.Log("===================== Join Game =====================");
+        if (!PhotonNetwork.IsConnected)
+        {
+            Debug.LogError("Photon not Connected. Please try again!");
+            return;
+        }
         PhotonNetwork.JoinRandomRoom();
     }
 
@@ -203,18 +206,19 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         PhotonNetwork.LeaveRoom();
     }
 
-    public void Connect()
+    IEnumerator Connect()
     {
-        isConnecting = true;
-        if (PhotonNetwork.IsConnected)
+        while (true)
         {
-            return;
+            if (PhotonNetwork.IsConnected) yield return new WaitForSeconds(3f);
+            else
+            {
+                PhotonNetwork.GameVersion = gameVersion;
+                PhotonNetwork.ConnectUsingSettings();
+                yield return new WaitForSeconds(3f);
+            }
         }
-        else
-        {
-            PhotonNetwork.GameVersion = gameVersion;
-            PhotonNetwork.ConnectUsingSettings();
-        }
+
     }
 
     public override void OnConnectedToMaster()

@@ -144,14 +144,15 @@ public class GameUI : MonoBehaviour, IListener
         controller.LeaveGame();
         ResetGame();
         await contract.ForceEndGame();
-        await contract.SetBalance();
     }
 
-    public void GameOver(bool isWon)
+    public async void GameOver(bool isWon)
     {
         gameOverPanel.SetActive(true);
         winText.SetActive(isWon);
         loseText.SetActive(!isWon);
+        if (isWon) await contract.WinGame();
+        else await contract.LoseGame();
     }
 
     public void ResetGame()
@@ -159,16 +160,12 @@ public class GameUI : MonoBehaviour, IListener
         gameOverPanel.SetActive(false);
         gameMenu.gameObject.SetActive(false);
         lobbyMenu.SetActive(true);
-        GameManager.Instance.ResetGame();
     }
 
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
     {
         switch (eventType)
         {
-            case EVENT_TYPE.ACCOUNT_READY:
-                // playButton.gameObject.SetActive(true);
-                break;
             case EVENT_TYPE.WHITE_FINISH:
                 UpdateScore();
                 break;

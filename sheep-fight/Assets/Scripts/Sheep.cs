@@ -138,6 +138,8 @@ public class Sheep : MonoBehaviour, IListener
             case EVENT_TYPE.GAMEOVER:
                 GameOver();
                 break;
+            default:
+                break;
         }
     }
 }

@@ -88,6 +88,18 @@ contract SheepFight {
         resetPlayer();
     }
 
+    function loseGame()
+        external
+    {
+        if (isPlaying[msg.sender]) {
+            isPlaying[msg.sender] = false;
+        }
+        uint gameIdx = playerToGame[msg.sender];
+        if (gameIdx != 0) {
+            playerToGame[msg.sender] = 0;
+        }
+    }
+
     function forceEndGame()
         external
     {
