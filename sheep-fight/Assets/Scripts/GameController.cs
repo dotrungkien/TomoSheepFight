@@ -187,16 +187,19 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
 
     public void CreateGame(string gameID = null)
     {
+        Debug.Log("===================== Create Game =====================");
         PhotonNetwork.CreateRoom(gameID, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PlayerTtl = 0, EmptyRoomTtl = 0 });
     }
 
     public void JoinGame()
     {
+        Debug.Log("===================== Join Game =====================");
         PhotonNetwork.JoinRandomRoom();
     }
 
     public void LeaveGame()
     {
+        Debug.Log("===================== Leave Game =====================");
         PhotonNetwork.LeaveRoom();
     }
 

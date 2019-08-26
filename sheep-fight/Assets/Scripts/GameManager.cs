@@ -37,8 +37,8 @@ public class GameManager : Singleton<GameManager>
 
     public void ResetGame()
     {
-        wScore = 100;
-        bScore = 100;
+        wScore = 10;
+        bScore = 10;
         for (int i = 0; i < bWeights.Length; i++)
         {
             bWeights[i] = 0;
