@@ -24,6 +24,8 @@ public interface IListener
 
 public class GameManager : Singleton<GameManager>, IListener
 {
+    public int MAX_SCORE = 30;
+
     public string currentGameID;
     public float maxCooldown = 5f;
 
@@ -37,13 +39,15 @@ public class GameManager : Singleton<GameManager>, IListener
 
     void Start()
     {
+        wScore = MAX_SCORE;
+        bScore = MAX_SCORE;
         AddListener(EVENT_TYPE.GAMEOVER, this);
     }
 
     public void ResetGame()
     {
-        wScore = 10;
-        bScore = 10;
+        wScore = MAX_SCORE;
+        bScore = MAX_SCORE;
         for (int i = 0; i < bWeights.Length; i++)
         {
             bWeights[i] = 0;

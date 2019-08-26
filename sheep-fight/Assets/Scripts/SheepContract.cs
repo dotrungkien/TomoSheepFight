@@ -201,6 +201,6 @@ public class SheepContract : MonoBehaviour, IListener
 
     private async void OnApplicationQuit()
     {
-        await ForceEndGame();
+        // await ForceEndGame();
     }
 }

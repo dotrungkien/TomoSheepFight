@@ -66,9 +66,9 @@ public class GameUI : MonoBehaviour, IListener
     void UpdateScore()
     {
         wScore.text = "" + GameManager.Instance.wScore;
-        whiteBar.fillAmount = GameManager.Instance.wScore / 100f;
+        whiteBar.fillAmount = GameManager.Instance.wScore / (float)GameManager.Instance.MAX_SCORE;
         bScore.text = "" + GameManager.Instance.bScore;
-        blackBar.fillAmount = GameManager.Instance.bScore / 100f;
+        blackBar.fillAmount = GameManager.Instance.bScore / (float)GameManager.Instance.MAX_SCORE;
     }
 
     public void EnableLoading()

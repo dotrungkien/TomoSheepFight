@@ -204,16 +204,16 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
 
     public void Connect()
     {
-        if (!PhotonNetwork.IsConnected)
-        {
-            PhotonNetwork.GameVersion = gameVersion;
-            PhotonNetwork.ConnectUsingSettings();
-        }
+        // if (!PhotonNetwork.IsConnected)
+        // {
+        PhotonNetwork.GameVersion = gameVersion;
+        PhotonNetwork.ConnectUsingSettings();
+        // }
     }
 
     public override void OnConnectedToMaster()
     {
-        // Debug.LogFormat("Connected to master, Room count = {0}", PhotonNetwork.CountOfRooms);
+        Debug.LogFormat("Connected to master, Room count = {0}, Player count = {1}", PhotonNetwork.CountOfRooms, PhotonNetwork.PlayerList.Length);
     }
 
     public override async void OnDisconnected(DisconnectCause cause)

@@ -245,7 +245,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 495c9e2a934bcc640a8d7427b13cb680, type: 3}
-    m_FontSize: 24
+    m_FontSize: 34
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -463,7 +463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.56463224, g: 0.12304199, b: 0.745283, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1868,15 +1868,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.8862745}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9647059}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 89829d6253e3a433c90a4bf30df0cc9a, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: d809eaf9dc88f481f9a4505c68ad00fa, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2855,8 +2855,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentGameID: 
   maxCooldown: 5
-  wScore: 10
-  bScore: 10
+  wScore: 30
+  bScore: 30
   bWeights: 0000000000000000000000000000000000000000
   wWeights: 0000000000000000000000000000000000000000
 --- !u!4 &559792991
@@ -4068,6 +4068,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: loading4
       objectReference: {fileID: 0}
+    - target: {fileID: 2932704916534145139, guid: 2f9170740b5a9405ea9837fbbad133ae,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2932704916534145138, guid: 2f9170740b5a9405ea9837fbbad133ae,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4136,12 +4141,12 @@ PrefabInstance:
     - target: {fileID: 2932704916534145138, guid: 2f9170740b5a9405ea9837fbbad133ae,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 2932704916534145138, guid: 2f9170740b5a9405ea9837fbbad133ae,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 300
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 2932704916534145138, guid: 2f9170740b5a9405ea9837fbbad133ae,
         type: 3}
@@ -4191,12 +4196,12 @@ PrefabInstance:
     - target: {fileID: 2932704915359883536, guid: 2f9170740b5a9405ea9837fbbad133ae,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 2932704915359883536, guid: 2f9170740b5a9405ea9837fbbad133ae,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 300
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 2932704916616351736, guid: 2f9170740b5a9405ea9837fbbad133ae,
         type: 3}
@@ -5063,7 +5068,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1108563200
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5559,8 +5564,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0.000015259, y: 179}
-  m_SizeDelta: {x: 196, y: 88}
+  m_AnchoredPosition: {x: -0.0000038146973, y: 169.3}
+  m_SizeDelta: {x: 239.2, y: 107.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1212483530
 MonoBehaviour:
@@ -6685,7 +6690,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.59607846}
+  m_Color: {r: 0.12156863, g: 0.13333334, b: 0.23921569, a: 0.9098039}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8594,7 +8599,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -402}
+  m_AnchoredPosition: {x: 0, y: -583}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1940598902
@@ -8619,7 +8624,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 495c9e2a934bcc640a8d7427b13cb680, type: 3}
-    m_FontSize: 30
+    m_FontSize: 34
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
