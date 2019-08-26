@@ -21,6 +21,7 @@ public class GameUI : MonoBehaviour, IListener
     public Button resetButton;
     public Button quitButton;
 
+    public GameObject firstTimePanel;
     public GameObject gameOverPanel;
     public GameObject winText;
     public GameObject loseText;
@@ -37,6 +38,16 @@ public class GameUI : MonoBehaviour, IListener
 
     void Start()
     {
+        int isFirstTime = PlayerPrefs.GetInt("isFirstTime", 0);
+        if (isFirstTime == 0)
+        {
+            firstTimePanel.SetActive(true);
+            PlayerPrefs.SetInt("isFirstTime", 1);
+        }
+        else
+        {
+            firstTimePanel.SetActive(false);
+        }
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.WHITE_FINISH, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLACK_FINISH, this);
