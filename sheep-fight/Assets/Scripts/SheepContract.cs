@@ -67,6 +67,7 @@ public class SheepContract : MonoBehaviour, IListener
     public void CopyAddress()
     {
         CopyToClipboard(from);
+        Application.OpenURL("https://faucet.testnet.tomochain.com");
     }
 
     async void AccountSetup()

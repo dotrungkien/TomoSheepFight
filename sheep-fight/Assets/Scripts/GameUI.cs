@@ -158,6 +158,7 @@ public class GameUI : MonoBehaviour, IListener
 
     public void ResetGame()
     {
+        GameManager.Instance.ResetGame();
         gameOverPanel.SetActive(false);
         gameMenu.gameObject.SetActive(false);
         lobbyMenu.SetActive(true);

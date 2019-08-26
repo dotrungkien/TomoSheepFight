@@ -186,19 +186,19 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
 
     public void CreateGame(string gameID = null)
     {
-        Debug.Log("===================== Create Game =====================");
+        // Debug.Log("===================== Create Game =====================");
         PhotonNetwork.CreateRoom(gameID, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PlayerTtl = 0, EmptyRoomTtl = 0 });
     }
 
     public void JoinGame()
     {
-        Debug.Log("===================== Join Game =====================");
+        // Debug.Log("===================== Join Game =====================");
         PhotonNetwork.JoinRandomRoom();
     }
 
     public void LeaveGame()
     {
-        Debug.Log("===================== Leave Game =====================");
+        // Debug.Log("===================== Leave Game =====================");
         if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
     }
 
@@ -213,7 +213,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
 
     public override void OnConnectedToMaster()
     {
-        Debug.LogFormat("Connected to master, Room count = {0}", PhotonNetwork.CountOfRooms);
+        // Debug.LogFormat("Connected to master, Room count = {0}", PhotonNetwork.CountOfRooms);
     }
 
     public override async void OnDisconnected(DisconnectCause cause)
@@ -238,7 +238,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         string gameID = PhotonNetwork.CurrentRoom.Name;
         GameManager.Instance.currentGameID = gameID;
         playTx = await contract.Play(gameID);
-        Debug.LogFormat("GameID: {0},  Play tx: {1}", gameID, playTx);
+        // Debug.LogFormat("GameID: {0},  Play tx: {1}", gameID, playTx);
         if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom) StartGame();
     }
 

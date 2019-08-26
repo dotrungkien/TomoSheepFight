@@ -141,7 +141,7 @@ public class GameManager : Singleton<GameManager>, IListener
         switch (eventType)
         {
             case EVENT_TYPE.GAMEOVER:
-                ResetGame();
+                // ResetGame();
                 break;
             default:
                 break;
