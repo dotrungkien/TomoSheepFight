@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public enum EVENT_TYPE
 {
     ACCOUNT_READY,
-    SOCKET_READY,
+    BLANCE_UPDATE,
     WHITE_FINISH,
     BLACK_FINISH,
     PLAY,
@@ -144,9 +144,6 @@ public class GameManager : Singleton<GameManager>, IListener
     {
         switch (eventType)
         {
-            case EVENT_TYPE.GAMEOVER:
-                // ResetGame();
-                break;
             default:
                 break;
         }
