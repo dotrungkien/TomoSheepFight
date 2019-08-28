@@ -66,12 +66,14 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLANCE_UPDATE, this);
         PhotonNetwork.ConnectUsingSettings();
+
+        SheepContract.Instance.ForceEndGame();
     }
 
     IEnumerator SetupPlay()
     {
         Disable(playButton.gameObject);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         Enable(playButton.gameObject);
     }
 
@@ -130,7 +132,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         RoomOptions options = new RoomOptions { MaxPlayers = 2 };
-        PhotonNetwork.CreateRoom(null, options, null);
+        PhotonNetwork.CreateRoom(null, options);
     }
 
     public override async void OnJoinedRoom()
@@ -153,9 +155,14 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         SwitchPanel(lobbyPanel.name);
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        SwitchPanel(lobbyPanel.name);
+    }
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        Debug.LogFormat("Entered game {0}", PhotonNetwork.CurrentRoom.Name);
+        // Debug.LogFormat("Entered game {0}", PhotonNetwork.CurrentRoom.PlayerCount);
         CheckPlayersReady();
     }
 
@@ -169,9 +176,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     private void CheckPlayersReady()
     {
         if (!PhotonNetwork.IsMasterClient) return;
-        if (PhotonNetwork.InRoom) return;
         if (PhotonNetwork.CurrentRoom.PlayerCount < 2) return;
-
         foreach (Player p in PhotonNetwork.PlayerList)
         {
             object isPlayerReady;
@@ -184,7 +189,6 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
                 return;
             }
         }
-        Debug.Log("All player ready, start game!");
         PhotonNetwork.LoadLevel("Game");
     }
 
