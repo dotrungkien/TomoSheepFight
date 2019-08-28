@@ -9,9 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Lobby.unity
     guid: 511f16a5b969a4893a8a626a866af7a9
   - enabled: 1
-    path: Assets/Scenes/Dummy.unity
-    guid: e06805fa5abab4bdbad328867a603e7b
-  - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 4bc76a373e6a94a2caf8fd2e0f56dacf
   m_configObjects: {}

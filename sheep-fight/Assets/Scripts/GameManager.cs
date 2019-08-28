@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using Photon.Pun;
+using Photon.Realtime;
+
 public enum EVENT_TYPE
 {
     ACCOUNT_READY,
@@ -140,6 +143,11 @@ public class GameManager : Singleton<GameManager>, IListener
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         RemoveRedundancies();
+    }
+
+    private void OnApplicationQuit()
+    {
+        PhotonNetwork.Disconnect();
     }
 
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)

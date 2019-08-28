@@ -58,7 +58,6 @@ public class SheepContract : Singleton<SheepContract>
 
     public void AccountSetup()
     {
-        Debug.Log("Account setup");
         var url = "https://testnet.tomochain.com";
 
         privateKey = PlayerPrefs.GetString("privateKey");
@@ -81,7 +80,7 @@ public class SheepContract : Singleton<SheepContract>
         while (true)
         {
             UpdateBalance();
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
         }
 
     }
@@ -89,12 +88,9 @@ public class SheepContract : Singleton<SheepContract>
     public async Task UpdateBalance()
     {
         var newBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
-        if (!newBalance.Equals(ethBalance))
-        {
-            ethBalance = newBalance;
-            decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
-            GameManager.Instance.PostNotification(EVENT_TYPE.BLANCE_UPDATE, this, ethBalanceVal);
-        }
+        ethBalance = newBalance;
+        decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
+        GameManager.Instance.PostNotification(EVENT_TYPE.BLANCE_UPDATE, this, ethBalanceVal);
     }
 
     void GetContract()

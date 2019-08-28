@@ -62,6 +62,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLANCE_UPDATE, this);
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     #region UI Callbacks
@@ -113,6 +114,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     #region PUN Callbacks
     public override void OnConnectedToMaster()
     {
+        // Debug.LogFormat("connected to master {0} {1}", PhotonNetwork.InLobby, PhotonNetwork.InRoom);
         // SwitchPanel(inRoomPanel.name);
     }
 
@@ -156,6 +158,8 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     private void CheckPlayersReady()
     {
         if (!PhotonNetwork.IsMasterClient) return;
+        if (PhotonNetwork.InRoom) return;
+        if (PhotonNetwork.CurrentRoom.PlayerCount < 2) return;
 
         foreach (Player p in PhotonNetwork.PlayerList)
         {
@@ -169,7 +173,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
                 return;
             }
         }
-        Debug.Log("All Player ready, start game!");
+        Debug.Log("All player ready, start game!");
         PhotonNetwork.LoadLevel("Game");
     }
 
@@ -181,11 +185,12 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
             case EVENT_TYPE.ACCOUNT_READY:
                 SetAccount((string)param);
                 PhotonNetwork.LocalPlayer.NickName = PlayerPrefs.GetString("NickName");
-                PhotonNetwork.ConnectUsingSettings();
+                PhotonNetwork.NickName = PlayerPrefs.GetString("NickName");
                 break;
 
             case EVENT_TYPE.BLANCE_UPDATE:
                 decimal balanceVal = (decimal)param;
+                SetAccount(PlayerPrefs.GetString("NickName"));
                 SetBalance(string.Format("{0:0.00} Tomo", balanceVal));
                 if (balanceVal > 1)
                 {
@@ -203,9 +208,4 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         }
     }
     #endregion
-
-    private void OnApplicationQuit()
-    {
-        PhotonNetwork.Disconnect();
-    }
 }
