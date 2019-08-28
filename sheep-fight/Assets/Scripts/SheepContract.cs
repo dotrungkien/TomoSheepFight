@@ -88,6 +88,17 @@ public class SheepContract : Singleton<SheepContract>
     public async Task UpdateBalance()
     {
         var newBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
+        if (!newBalance.Equals(ethBalance))
+        {
+            ethBalance = newBalance;
+            decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
+            GameManager.Instance.PostNotification(EVENT_TYPE.BLANCE_UPDATE, this, ethBalanceVal);
+        }
+    }
+
+    public async Task ForceUpdateBalance()
+    {
+        var newBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         ethBalance = newBalance;
         decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
         GameManager.Instance.PostNotification(EVENT_TYPE.BLANCE_UPDATE, this, ethBalanceVal);

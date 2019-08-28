@@ -28,7 +28,7 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
     public GameObject loseText;
     public GameObject exitPanel;
     public GameController controller;
-    public GameObject loading;
+    public GameObject txConfirmPanel;
 
     private float maxScore;
 
@@ -45,7 +45,7 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
         maxScore = (float)GameManager.Instance.MAX_SCORE;
 
         Disable(gameOverPanel);
-        Disable(loading);
+        Disable(txConfirmPanel);
         UpdateScore();
         StartGame();
     }
@@ -60,22 +60,26 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
 
     public void Enable(GameObject obj)
     {
-        obj.SetActive(true);
+        if (obj != null) obj.SetActive(true);
     }
 
     public void Disable(GameObject obj)
     {
-        obj.SetActive(false);
+        if (obj != null) obj.SetActive(false);
     }
 
     public async void QuitGame()
     {
+        LeaveGame();
+        Enable(txConfirmPanel);
         await SheepContract.Instance.ForceEndGame();
+        Disable(txConfirmPanel);
         ResetGame();
     }
 
     public async void GameOver(bool isWon)
     {
+        LeaveGame();
         Enable(gameOverPanel);
         winText.SetActive(isWon);
         loseText.SetActive(!isWon);
@@ -91,7 +95,6 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
 
     public void ResetGame()
     {
-        LeaveGame();
         GameManager.Instance.ResetGame();
         SceneManager.LoadSceneAsync("Lobby");
     }
@@ -125,7 +128,7 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
     #region PUN Callbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
-        SceneManager.LoadScene("Lobby");
+        // SceneManager.LoadScene("Lobby");
     }
 
     public override void OnLeftRoom()

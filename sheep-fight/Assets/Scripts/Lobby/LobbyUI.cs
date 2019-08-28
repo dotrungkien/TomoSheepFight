@@ -67,13 +67,14 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         GameManager.Instance.AddListener(EVENT_TYPE.BLANCE_UPDATE, this);
         PhotonNetwork.ConnectUsingSettings();
 
+        SheepContract.Instance.ForceUpdateBalance();
         SheepContract.Instance.ForceEndGame();
     }
 
     IEnumerator SetupPlay()
     {
         Disable(playButton.gameObject);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         Enable(playButton.gameObject);
     }
 
@@ -91,12 +92,12 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     public void Enable(GameObject obj)
     {
-        obj.SetActive(true);
+        if (obj != null) obj.SetActive(true);
     }
 
     public void Disable(GameObject obj)
     {
-        obj.SetActive(false);
+        if (obj != null) obj.SetActive(false);
     }
 
     public void SetAccount(string addressText)
@@ -145,9 +146,9 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         int seed = Convert.ToInt32(subTx, 16);
         GameManager.Instance.currentSeed = seed;
         var props = new ExitGames.Client.Photon.Hashtable { { READY_PROP, true } };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         Disable(txConfirmPanel);
         SwitchPanel(inRoomPanel.name);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
 
     public override void OnLeftRoom()
@@ -210,7 +211,6 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
                 if (balanceVal > 1)
                 {
                     Disable(insufficientBalance);
-                    Enable(playButton.gameObject);
                 }
                 else
                 {
