@@ -44,6 +44,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     {
         maxCooldown = GameManager.Instance.maxCooldown;
         GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
+        Play();
     }
 
     public void UpdateIcons()
@@ -80,13 +81,12 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         ResetCooldown();
     }
 
-    public void Play(string tx)
+    public void Play()
     {
         isPlaying = true;
         isReady = true;
         coolDown = 0f;
-        var subTx = tx.Substring(0, 8);
-        int seed = Convert.ToInt32(subTx, 16);
+        int seed = GameManager.Instance.currentSeed;
         rand = new System.Random(seed);
         sheeps = new List<int>();
         for (int i = 0; i < 200; i++)

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -9,11 +8,15 @@ using UnityEngine.UI;
 using Nethereum.Web3;
 using Nethereum.Hex.HexTypes;
 
+using ExitGames.Client.Photon;
+
 using Photon.Pun;
 using Photon.Realtime;
 
 public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 {
+    private const string READY_PROP = "isPlayerReady";
+
     [Header("Account details")]
     public Text address;
     public Text balance;
@@ -98,9 +101,12 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         PhotonNetwork.JoinRandomRoom();
     }
 
-    public void QuitGame()
+    public async void QuitGame()
     {
         PhotonNetwork.LeaveRoom();
+        Enable(txConfirmPanel);
+        await SheepContract.Instance.ForceEndGame();
+        Disable(txConfirmPanel);
     }
     #endregion
 
@@ -116,10 +122,17 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         PhotonNetwork.CreateRoom(null, options, null);
     }
 
-    public override void OnJoinedRoom()
+    public override async void OnJoinedRoom()
     {
         string gameID = PhotonNetwork.CurrentRoom.Name;
-        SheepContract.Instance.Play(gameID);
+        Enable(txConfirmPanel);
+        var tx = await SheepContract.Instance.Play(gameID);
+        var subTx = tx.Substring(0, 8);
+        int seed = Convert.ToInt32(subTx, 16);
+        GameManager.Instance.currentSeed = seed;
+        Hashtable props = new Hashtable { { READY_PROP, true } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        Disable(txConfirmPanel);
         SwitchPanel(inRoomPanel.name);
     }
 
@@ -130,10 +143,35 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        PhotonNetwork.LoadLevel("Game");
+        CheckPlayersReady();
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        CheckPlayersReady();
     }
 
     #endregion
+
+    private void CheckPlayersReady()
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        foreach (Player p in PhotonNetwork.PlayerList)
+        {
+            object isPlayerReady;
+            if (p.CustomProperties.TryGetValue(READY_PROP, out isPlayerReady))
+            {
+                if (!(bool)isPlayerReady) return;
+            }
+            else
+            {
+                return;
+            }
+        }
+        Debug.Log("All Player ready, start game!");
+        PhotonNetwork.LoadLevel("Game");
+    }
 
     #region Event Manager
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
