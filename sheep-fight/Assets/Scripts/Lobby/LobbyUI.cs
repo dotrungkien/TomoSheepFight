@@ -1,5 +1,8 @@
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -115,6 +118,8 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     public override void OnJoinedRoom()
     {
+        string gameID = PhotonNetwork.CurrentRoom.Name;
+        SheepContract.Instance.Play(gameID);
         SwitchPanel(inRoomPanel.name);
     }
 
@@ -125,7 +130,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        PhotonNetwork.LoadLevel("Dummy");
+        PhotonNetwork.LoadLevel("Game");
     }
 
     #endregion
@@ -160,4 +165,9 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         }
     }
     #endregion
+
+    private void OnApplicationQuit()
+    {
+        PhotonNetwork.Disconnect();
+    }
 }

@@ -1,168 +1,98 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 using Nethereum.Web3;
 using Nethereum.Hex.HexTypes;
 
-public class GameUI : MonoBehaviour, IListener
+using Photon.Pun;
+using Photon.Realtime;
+
+public class GameUI : MonoBehaviourPunCallbacks, IListener
 {
     public Image whiteBar;
     public Text wScore;
     public Image blackBar;
     public Text bScore;
-    public Text account;
     public Text localPlayer;
     public Text otherPlayer;
-    public Text balance;
 
-    public Button playButton;
-    public GameObject insufficientBalance;
     public Button resetButton;
     public Button quitButton;
 
-    public GameObject firstTimePanel;
     public GameObject gameOverPanel;
     public GameObject winText;
     public GameObject loseText;
-    public GameObject waitPanel;
     public GameObject exitPanel;
-
     public GameController controller;
-    public SheepContract contract;
-
-    public GameObject lobbyMenu;
-    public GameObject gameMenu;
-
     public GameObject loading;
+
+    private float maxScore;
 
     void Start()
     {
-        int isFirstTime = PlayerPrefs.GetInt("isFirstTime", 0);
-        if (isFirstTime == 0)
-        {
-            firstTimePanel.SetActive(true);
-            PlayerPrefs.SetInt("isFirstTime", 1);
-        }
-        else
-        {
-            firstTimePanel.SetActive(false);
-        }
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.WHITE_FINISH, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLACK_FINISH, this);
         GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
-        playButton.onClick.AddListener(PlayGame);
+
         quitButton.onClick.AddListener(QuitGame);
         resetButton.onClick.AddListener(ResetGame);
-        gameOverPanel.SetActive(false);
-        insufficientBalance.SetActive(false);
-        DisablePlay();
-        DisableLoading();
+
+        maxScore = (float)GameManager.Instance.MAX_SCORE;
+
+        Disable(gameOverPanel);
+        Disable(loading);
         UpdateScore();
     }
 
     void UpdateScore()
     {
         wScore.text = "" + GameManager.Instance.wScore;
-        whiteBar.fillAmount = GameManager.Instance.wScore / (float)GameManager.Instance.MAX_SCORE;
+        whiteBar.fillAmount = GameManager.Instance.wScore / maxScore;
         bScore.text = "" + GameManager.Instance.bScore;
-        blackBar.fillAmount = GameManager.Instance.bScore / (float)GameManager.Instance.MAX_SCORE;
+        blackBar.fillAmount = GameManager.Instance.bScore / maxScore;
     }
 
-    public void EnableLoading()
+    public void Enable(GameObject obj)
     {
-        loading.gameObject.SetActive(true);
+        obj.SetActive(true);
     }
 
-    public void DisableLoading()
+    public void Disable(GameObject obj)
     {
-        loading.gameObject.SetActive(false);
-    }
-
-    public void EnablePlay()
-    {
-        insufficientBalance.SetActive(false);
-        playButton.gameObject.SetActive(true);
-    }
-
-    public void InsufficientBalance()
-    {
-        insufficientBalance.SetActive(true);
-    }
-
-    public void DisablePlay()
-    {
-        playButton.gameObject.SetActive(false);
-    }
-
-    public void EnableWaiting()
-    {
-        waitPanel.SetActive(true);
-    }
-
-    public void DisableWaiting()
-    {
-        waitPanel.SetActive(false);
-    }
-
-    public void SetAccount(string address, bool isLocal = true)
-    {
-        if (isLocal)
-        {
-            account.text = address;
-            localPlayer.text = address;
-        }
-        else
-        {
-            otherPlayer.text = address;
-        }
-    }
-
-    public void SetBalance(string balanceText)
-    {
-        balance.text = balanceText;
-    }
-
-    public void PlayGame()
-    {
-        EnableLoading();
-        GameManager.Instance.ResetGame();
-        controller.JoinGame();
-    }
-
-    public void PlayConfirmed()
-    {
-        gameMenu.SetActive(true);
-        EnableWaiting();
-        exitPanel.SetActive(false);
-        lobbyMenu.SetActive(false);
+        obj.SetActive(false);
     }
 
     public async void QuitGame()
     {
-        controller.LeaveGame();
+        await SheepContract.Instance.ForceEndGame();
         ResetGame();
-        await contract.ForceEndGame();
     }
 
     public async void GameOver(bool isWon)
     {
-        gameOverPanel.SetActive(true);
+        Enable(gameOverPanel);
         winText.SetActive(isWon);
         loseText.SetActive(!isWon);
-        if (isWon) await contract.WinGame();
-        else await contract.LoseGame();
+        if (isWon)
+        {
+            await SheepContract.Instance.WinGame();
+        }
+        else
+        {
+            await SheepContract.Instance.LoseGame();
+        }
     }
 
     public void ResetGame()
     {
+        LeaveGame();
         GameManager.Instance.ResetGame();
-        gameOverPanel.SetActive(false);
-        gameMenu.gameObject.SetActive(false);
-        lobbyMenu.SetActive(true);
-        controller.LeaveGame();
+        SceneManager.LoadSceneAsync("Lobby");
     }
 
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
@@ -184,4 +114,58 @@ public class GameUI : MonoBehaviour, IListener
         }
     }
 
+    #region network implement
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        // await contract.ForceEndGame();
+        SceneManager.LoadScene("Lobby");
+    }
+
+    public override async void OnJoinedRoom()
+    {
+        string gameID = PhotonNetwork.CurrentRoom.Name;
+        playTx = await contract.Play(gameID);
+        // Debug.LogFormat("GameID: {0},  Play tx: {1}", gameID, playTx);
+        if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom) StartGame();
+    }
+
+    public void StartGame()
+    {
+        Play(playTx);
+        var players = PhotonNetwork.CurrentRoom.Players;
+        // Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
+        if (!players[1].IsLocal) gameUI.SetAccount(players[1].NickName, false);
+        else gameUI.SetAccount(players[2].NickName, false);
+    }
+
+    public void LeaveGame()
+    {
+        if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnPlayerLeftRoom(Player other)
+    {
+        Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
+        if (isPlaying) gameUI.GameOver(true);
+        LeaveGame();
+    }
+
+    public override void OnLeftRoom()
+    {
+        PhotonNetwork.Disconnect();
+    }
+
+    public void SendTurn(int sheepIndex, int laneIndex)
+    {
+        photonView.RPC("SendTurnRPC", RpcTarget.All, sheepIndex, laneIndex);
+    }
+
+    [PunRPC]
+    void SendTurnRPC(int sheepIndex, int laneIndex, PhotonMessageInfo info)
+    {
+        // Debug.Log(string.Format("Info: {0} --- {1} -- {2}", sheepIndex, laneIndex, info.Sender.IsLocal));
+        if (!info.Sender.IsLocal) SpawnBlackSheep(sheepIndex, laneIndex);
+    }
+
+    #endregion
 }

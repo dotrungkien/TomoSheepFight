@@ -10,29 +10,29 @@ using UnityEngine;
 
 public class GameController : MonoBehaviourPunCallbacks, IListener
 {
+    public GameUI gameUI;
+
     public Sheep[] whiteSheeps;
     public Sheep[] blackSheeps;
     public Transform[] wSpawnPositions;
     public Transform[] bSpawnPositions;
-
-    public float coolDown = 0.0f;
-    public bool isPlaying = false;
-    public bool isReady = false;
-
-    [HideInInspector]
-    public List<int> sheeps;
     public SheepIcon[] icons;
 
-    public SheepContract contract;
-    public GameUI gameUI;
+    [HideInInspector]
+    public float coolDown = 0.0f;
+    [HideInInspector]
+    public bool isPlaying = false;
+    [HideInInspector]
+    public bool isReady = false;
+    [HideInInspector]
+    public List<int> sheeps;
+
 
     private float maxCooldown;
     private Sheep currentSheep = null;
     private System.Random rand;
-
-    string gameVersion = "1";
+    private string gameVersion = "1";
     private byte maxPlayersPerRoom = 2;
-
     private string playTx;
 
     void Awake()
@@ -44,7 +44,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     {
         maxCooldown = GameManager.Instance.maxCooldown;
         GameManager.Instance.AddListener(EVENT_TYPE.GAMEOVER, this);
-        Connect();
     }
 
     public void UpdateIcons()
@@ -129,7 +128,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
             currentSheep.laneIndex = laneIndex;
             yield return new WaitForSeconds(coolDown);
             currentSheep.BeSpawned(currentSheep.laneIndex);
-            SendTurn(sheepIndex, currentSheep.laneIndex);
+            gameUI.SendTurn(sheepIndex, currentSheep.laneIndex);
             NextTurn();
         }
         else
@@ -145,7 +144,7 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         {
             Sheep sheep = Instantiate<Sheep>(whiteSheeps[sheepIndex], wSpawnPositions[laneIndex].position, Quaternion.identity, wSpawnPositions[laneIndex]);
             sheep.BeSpawned(laneIndex);
-            SendTurn(sheepIndex, laneIndex);
+            gameUI.SendTurn(sheepIndex, laneIndex);
         }
         else
         {
@@ -176,107 +175,4 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
                 break;
         }
     }
-
-    #region network implement
-
-    public void SetNickName(string nickname)
-    {
-        PhotonNetwork.NickName = nickname;
-    }
-
-    public void CreateGame(string gameID = null)
-    {
-        // Debug.Log("===================== Create Game =====================");
-        PhotonNetwork.CreateRoom(gameID, new RoomOptions { MaxPlayers = maxPlayersPerRoom, PlayerTtl = 0, EmptyRoomTtl = 0 });
-    }
-
-    public void JoinGame()
-    {
-        // Debug.Log("===================== Join Game =====================");
-        PhotonNetwork.JoinRandomRoom();
-    }
-
-    public void LeaveGame()
-    {
-        // Debug.Log("===================== Leave Game =====================");
-        if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
-    }
-
-    public void Connect()
-    {
-        // if (!PhotonNetwork.IsConnected)
-        // {
-        PhotonNetwork.GameVersion = gameVersion;
-        PhotonNetwork.ConnectUsingSettings();
-        // }
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        Debug.LogFormat("Connected to master, Room count = {0}, Player count = {1}", PhotonNetwork.CountOfRooms, PhotonNetwork.PlayerList.Length);
-    }
-
-    public override async void OnDisconnected(DisconnectCause cause)
-    {
-        // Debug.LogWarningFormat("OnDisconnected() with reason {0}", cause);
-        await contract.ForceEndGame();
-    }
-
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        CreateGame();
-    }
-
-
-    public override void OnPlayerEnteredRoom(Player other)
-    {
-        StartGame();
-    }
-
-    public override async void OnJoinedRoom()
-    {
-        string gameID = PhotonNetwork.CurrentRoom.Name;
-        playTx = await contract.Play(gameID);
-        // Debug.LogFormat("GameID: {0},  Play tx: {1}", gameID, playTx);
-        if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom) StartGame();
-    }
-
-    public void StartGame()
-    {
-        Play(playTx);
-        gameUI.DisableWaiting();
-        var players = PhotonNetwork.CurrentRoom.Players;
-        // Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
-        if (!players[1].IsLocal) gameUI.SetAccount(players[1].NickName, false);
-        else gameUI.SetAccount(players[2].NickName, false);
-    }
-
-
-    public override void OnPlayerLeftRoom(Player other)
-    {
-        Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
-        if (isPlaying) gameUI.GameOver(true);
-        LeaveGame();
-    }
-
-    public override void OnLeftRoom()
-    {
-        // Debug.Log("gg, i quit");
-        playTx = "";
-        // endgame here
-    }
-
-    public void SendTurn(int sheepIndex, int laneIndex)
-    {
-        photonView.RPC("SendTurnRPC", RpcTarget.All, sheepIndex, laneIndex);
-    }
-
-    [PunRPC]
-    void SendTurnRPC(int sheepIndex, int laneIndex, PhotonMessageInfo info)
-    {
-        // Debug.Log(string.Format("Info: {0} --- {1} -- {2}", sheepIndex, laneIndex, info.Sender.IsLocal));
-        if (!info.Sender.IsLocal) SpawnBlackSheep(sheepIndex, laneIndex);
-    }
-
-    #endregion
 }

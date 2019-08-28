@@ -35,6 +35,9 @@ public class GameManager : Singleton<GameManager>, IListener
     public int[] bWeights;
     public int[] wWeights;
 
+    [HideInInspector]
+    public int currentSeed;
+
     private Dictionary<EVENT_TYPE, List<IListener>> listeners = new Dictionary<EVENT_TYPE, List<IListener>>();
 
     void Start()
@@ -42,6 +45,7 @@ public class GameManager : Singleton<GameManager>, IListener
         wScore = MAX_SCORE;
         bScore = MAX_SCORE;
         AddListener(EVENT_TYPE.GAMEOVER, this);
+        currentSeed = new System.Random().Next();
     }
 
     public void ResetGame()
@@ -53,8 +57,6 @@ public class GameManager : Singleton<GameManager>, IListener
             bWeights[i] = 0;
             wWeights[i] = 0;
         }
-        GameObject[] sheeps = GameObject.FindGameObjectsWithTag("Sheep");
-        foreach (GameObject sheep in sheeps) Destroy(sheep);
     }
 
     public Vector3 LaneVelocity(int laneIndex)

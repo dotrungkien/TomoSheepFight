@@ -56,7 +56,7 @@ public class SheepContract : Singleton<SheepContract>
         Application.OpenURL("https://faucet.testnet.tomochain.com");
     }
 
-    async void AccountSetup()
+    void AccountSetup()
     {
         var url = "https://testnet.tomochain.com";
 
