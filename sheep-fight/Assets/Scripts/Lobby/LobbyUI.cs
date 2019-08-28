@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -16,6 +17,8 @@ using Photon.Realtime;
 public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 {
     private const string READY_PROP = "isPlayerReady";
+
+    public Text gameIDText;
 
     [Header("Account details")]
     public Text address;
@@ -55,7 +58,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         faucetButton.onClick.AddListener(CopyAndGoFaucet);
 
         Disable(insufficientBalance);
-        Disable(playButton.gameObject);
+        StartCoroutine(SetupPlay());
         Disable(txConfirmPanel);
 
         SwitchPanel(lobbyPanel.name);
@@ -63,6 +66,13 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLANCE_UPDATE, this);
         PhotonNetwork.ConnectUsingSettings();
+    }
+
+    IEnumerator SetupPlay()
+    {
+        Disable(playButton.gameObject);
+        yield return new WaitForSeconds(0.5f);
+        Enable(playButton.gameObject);
     }
 
     #region UI Callbacks
@@ -114,7 +124,6 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     #region PUN Callbacks
     public override void OnConnectedToMaster()
     {
-        // Debug.LogFormat("connected to master {0} {1}", PhotonNetwork.InLobby, PhotonNetwork.InRoom);
         // SwitchPanel(inRoomPanel.name);
     }
 
@@ -127,12 +136,13 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     public override async void OnJoinedRoom()
     {
         string gameID = PhotonNetwork.CurrentRoom.Name;
+        gameIDText.text = gameID;
         Enable(txConfirmPanel);
         var tx = await SheepContract.Instance.Play(gameID);
         var subTx = tx.Substring(0, 8);
         int seed = Convert.ToInt32(subTx, 16);
         GameManager.Instance.currentSeed = seed;
-        Hashtable props = new Hashtable { { READY_PROP, true } };
+        var props = new ExitGames.Client.Photon.Hashtable { { READY_PROP, true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         Disable(txConfirmPanel);
         SwitchPanel(inRoomPanel.name);
@@ -145,10 +155,11 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        Debug.LogFormat("Entered game {0}", PhotonNetwork.CurrentRoom.Name);
         CheckPlayersReady();
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         CheckPlayersReady();
     }
