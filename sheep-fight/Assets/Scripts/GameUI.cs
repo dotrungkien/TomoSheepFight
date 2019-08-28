@@ -98,6 +98,11 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
 
     public void StartGame()
     {
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.LogError("Not in room");
+            return;
+        }
         var players = PhotonNetwork.CurrentRoom.Players;
         // Debug.LogFormat("Start Game {0}, players: {1} -vs- {2}", PhotonNetwork.CurrentRoom.Name, players[1].NickName, players[2].NickName);
         if (players[1].IsLocal)
@@ -112,27 +117,25 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
         }
     }
 
+    public void LeaveGame()
+    {
+        if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+    }
+
     #region PUN Callbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         SceneManager.LoadScene("Lobby");
     }
 
-
-    public void LeaveGame()
+    public override void OnLeftRoom()
     {
-        if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
     }
 
     public override void OnPlayerLeftRoom(Player other)
     {
-        if (controller.isPlaying) GameOver(true);
-        LeaveGame();
-    }
-
-    public override void OnLeftRoom()
-    {
-        PhotonNetwork.Disconnect();
+        GameOver(true);
     }
 
     public void SendTurn(int sheepIndex, int laneIndex)

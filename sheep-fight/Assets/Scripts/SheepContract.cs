@@ -56,8 +56,9 @@ public class SheepContract : Singleton<SheepContract>
         Application.OpenURL("https://faucet.testnet.tomochain.com");
     }
 
-    void AccountSetup()
+    public void AccountSetup()
     {
+        Debug.Log("Account setup");
         var url = "https://testnet.tomochain.com";
 
         privateKey = PlayerPrefs.GetString("privateKey");

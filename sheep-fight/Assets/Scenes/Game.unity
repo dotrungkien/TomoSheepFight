@@ -2859,6 +2859,7 @@ MonoBehaviour:
   bScore: 30
   bWeights: 0000000000000000000000000000000000000000
   wWeights: 0000000000000000000000000000000000000000
+  currentSeed: 0
 --- !u!4 &559792991
 Transform:
   m_ObjectHideFlags: 0
@@ -3296,6 +3297,7 @@ GameObject:
   - component: {fileID: 705987316}
   - component: {fileID: 705987315}
   - component: {fileID: 705987318}
+  - component: {fileID: 705987319}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3403,25 +3405,38 @@ MonoBehaviour:
   wScore: {fileID: 899830117}
   blackBar: {fileID: 1975130752}
   bScore: {fileID: 1611314144}
-  account: {fileID: 366248863}
   localPlayer: {fileID: 597982999}
   otherPlayer: {fileID: 1217708662}
-  balance: {fileID: 1012723937}
-  playButton: {fileID: 1108563201}
-  insufficientBalance: {fileID: 1940598900}
   resetButton: {fileID: 163974968}
   quitButton: {fileID: 1672958851}
-  firstTimePanel: {fileID: 291692241}
   gameOverPanel: {fileID: 506337135}
   winText: {fileID: 47125110}
   loseText: {fileID: 1438958684}
-  waitPanel: {fileID: 1066753858}
   exitPanel: {fileID: 2134950056}
   controller: {fileID: 1068698413}
-  contract: {fileID: 0}
-  lobbyMenu: {fileID: 1406537447}
-  gameMenu: {fileID: 1796635377}
   loading: {fileID: 1469086999}
+--- !u!114 &705987319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705987313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  viewIdField: 1
+  InstantiationId: 1
+  isRuntimeInstantiated: 0
 --- !u!1 &711674665
 GameObject:
   m_ObjectHideFlags: 0
@@ -4720,7 +4735,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1068698414}
   - component: {fileID: 1068698413}
-  - component: {fileID: 1068698415}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Untagged
@@ -4740,6 +4754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f760451c962de4890b0697210c136752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameUI: {fileID: 705987318}
   whiteSheeps:
   - {fileID: 373012591, guid: 8649761a7b2a34f7e8872914b177a9f5, type: 3}
   - {fileID: 1780951946, guid: 6320f43c394b0482196db29a28127af5, type: 3}
@@ -4764,17 +4779,15 @@ MonoBehaviour:
   - {fileID: 1157364851}
   - {fileID: 179695962}
   - {fileID: 1384046401}
-  coolDown: 5
-  isPlaying: 0
-  isReady: 0
-  sheeps: 
   icons:
   - {fileID: 1008184779}
   - {fileID: 1010007103}
   - {fileID: 1514628012}
   - {fileID: 196626194}
-  contract: {fileID: 0}
-  gameUI: {fileID: 705987318}
+  coolDown: 5
+  isPlaying: 0
+  isReady: 0
+  sheeps: 
 --- !u!4 &1068698414
 Transform:
   m_ObjectHideFlags: 0
@@ -4789,28 +4802,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1068698415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068698412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 0
-  OwnershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 0}
-  viewIdField: 1
-  InstantiationId: 1
-  isRuntimeInstantiated: 0
 --- !u!1 &1108563199
 GameObject:
   m_ObjectHideFlags: 0

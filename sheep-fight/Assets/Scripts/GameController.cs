@@ -83,6 +83,11 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
 
     public void Play()
     {
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.LogError("Not in room");
+            return;
+        }
         isPlaying = true;
         isReady = true;
         coolDown = 0f;
