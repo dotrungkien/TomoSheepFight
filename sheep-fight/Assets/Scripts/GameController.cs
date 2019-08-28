@@ -236,7 +236,6 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
     public override async void OnJoinedRoom()
     {
         string gameID = PhotonNetwork.CurrentRoom.Name;
-        GameManager.Instance.currentGameID = gameID;
         playTx = await contract.Play(gameID);
         // Debug.LogFormat("GameID: {0},  Play tx: {1}", gameID, playTx);
         if (PhotonNetwork.CurrentRoom.PlayerCount == maxPlayersPerRoom) StartGame();

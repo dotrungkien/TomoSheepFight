@@ -24,9 +24,9 @@ public interface IListener
 
 public class GameManager : Singleton<GameManager>, IListener
 {
+    [HideInInspector]
     public int MAX_SCORE = 30;
-
-    public string currentGameID;
+    [HideInInspector]
     public float maxCooldown = 5f;
 
     public int wScore;

@@ -2854,7 +2854,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MAX_SCORE: 30
-  currentGameID: 
   maxCooldown: 5
   wScore: 30
   bScore: 30
@@ -4668,9 +4667,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contractABI: {fileID: 4900000, guid: 64affdb99d0d14c5cb3ca265c4c0b56e, type: 3}
   contractAddress: {fileID: 4900000, guid: 6d9b964cf5885414e904f9898792ee67, type: 3}
-  gameUI: {fileID: 705987318}
-  copyButton: {fileID: 285486591}
-  controller: {fileID: 1068698413}
 --- !u!4 &1041407450
 Transform:
   m_ObjectHideFlags: 0
@@ -6164,7 +6160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1406537448
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8976,6 +8972,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Loading
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477049484584768242, guid: eb8870124a7f741c184f93ee01306889,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3477049484584768253, guid: eb8870124a7f741c184f93ee01306889,
         type: 3}

@@ -17,6 +17,11 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     [Header("UI Elements")]
     public Button playButton;
+    public Button faucetButton;
+
+    public GameObject lobbyPanel;
+    public GameObject inRoomPanel;
+
     public GameObject txConfirmPanel;
     public GameObject insufficientBalance;
     public GameObject firstTimePanel;
@@ -34,6 +39,8 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
             firstTimePanel.SetActive(false);
         }
         playButton.onClick.AddListener(PlayGame);
+        faucetButton.onClick.AddListener(CopyAndGoFaucet);
+
         Disable(insufficientBalance);
         Disable(playButton.gameObject);
         Disable(txConfirmPanel);
@@ -42,6 +49,12 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         GameManager.Instance.AddListener(EVENT_TYPE.BLANCE_UPDATE, this);
     }
 
+    #region UI Callbacks
+    public void SwitchPanel(string panelName)
+    {
+        lobbyPanel.SetActive(lobbyPanel.name.Equals(panelName));
+        inRoomPanel.SetActive(inRoomPanel.name.Equals(panelName));
+    }
 
     public void CopyAndGoFaucet()
     {
@@ -73,7 +86,13 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         Enable(txConfirmPanel);
         PhotonNetwork.JoinRandomRoom();
     }
+    #endregion
 
+    #region PUN Callbacks
+
+    #endregion
+
+    #region Event Manager
     public void OnEvent(EVENT_TYPE eventType, Component sender, object param = null)
     {
         switch (eventType)
@@ -100,4 +119,5 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
                 break;
         }
     }
+    #endregion
 }
