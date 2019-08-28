@@ -25,7 +25,7 @@ Open the app, the first thing you see will be like this:
 
 ![](https://serving.photos.photobox.com/250859539a8b021c97d6ad50bbcdd6642ed57acd0fe1b0f53a59775e66c9825ab746f492.jpg)
 
-At first, we create an account for your, so you don't need to worry about the private key or any key at all.
+At first, we create an account for your, so you don't need to worry about the private key or any key at all. 
 
 By clicking `COPY & GO TO FAUCET` we will be redirected to [Tomo Faucet](https://faucet.testnet.tomochain.com). Get 15 Tomo just enough to get started. Of course you can get as much as you want.
 
@@ -224,10 +224,10 @@ There 2 scene in this game:
 
 1. Lobby
 
-At lobby we init the Photon network, Sheep Fight smart contract, set up player and match making.
+At lobby we init the Photon network, Sheep Fight smart contract, set up player and match making. 
 
 Please check the Unity project `Scenes/Lobby` Scene and `Scripts/Lobby/` for more detail.
-
+  
 2. Game
 
 In game, there a `Game Controller` to control the sheep spawn, for both local player (base on player click) and remote player (base on Photon RPC call).
@@ -246,6 +246,7 @@ In next step, sound & music also gonna be added.
 
 - We use Nethereum to implement Web3 & contract instance in game. All transaction will be done asynchronously.
 
+
 ## Known issues
 
 Due to short duration of development in this hackathon, we've faced many troubles, and some even still exist in the latest build.
@@ -258,5 +259,6 @@ In next versions, we are going to fix all bugs and publish the game not only And
 
 Enjoy gaming.
 
-_Do Trung Kien
-trungkien.keio@gmail.com_
+*Do Trung Kien
+trungkien.keio@gmail.com*
+
