@@ -18,6 +18,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     [Header("UI Elements")]
     public Button playButton;
     public Button faucetButton;
+    public Button quitButton;
 
     public GameObject lobbyPanel;
     public GameObject inRoomPanel;
@@ -25,6 +26,11 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     public GameObject txConfirmPanel;
     public GameObject insufficientBalance;
     public GameObject firstTimePanel;
+
+    void Awake()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
 
     void Start()
     {
@@ -39,11 +45,14 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
             firstTimePanel.SetActive(false);
         }
         playButton.onClick.AddListener(PlayGame);
+        quitButton.onClick.AddListener(QuitGame);
         faucetButton.onClick.AddListener(CopyAndGoFaucet);
 
         Disable(insufficientBalance);
         Disable(playButton.gameObject);
         Disable(txConfirmPanel);
+
+        SwitchPanel(lobbyPanel.name);
 
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLANCE_UPDATE, this);
@@ -83,12 +92,41 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     public void PlayGame()
     {
-        Enable(txConfirmPanel);
         PhotonNetwork.JoinRandomRoom();
+    }
+
+    public void QuitGame()
+    {
+        PhotonNetwork.LeaveRoom();
     }
     #endregion
 
     #region PUN Callbacks
+    public override void OnConnectedToMaster()
+    {
+        // SwitchPanel(inRoomPanel.name);
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        RoomOptions options = new RoomOptions { MaxPlayers = 2 };
+        PhotonNetwork.CreateRoom(null, options, null);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        SwitchPanel(inRoomPanel.name);
+    }
+
+    public override void OnLeftRoom()
+    {
+        SwitchPanel(lobbyPanel.name);
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        PhotonNetwork.LoadLevel("Dummy");
+    }
 
     #endregion
 
@@ -99,6 +137,8 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         {
             case EVENT_TYPE.ACCOUNT_READY:
                 SetAccount((string)param);
+                PhotonNetwork.LocalPlayer.NickName = PlayerPrefs.GetString("NickName");
+                PhotonNetwork.ConnectUsingSettings();
                 break;
 
             case EVENT_TYPE.BLANCE_UPDATE:
