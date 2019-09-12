@@ -10,6 +10,8 @@ using Photon.Realtime;
 
 public enum EVENT_TYPE
 {
+    NO_PRIVATE_KEY,
+    INSUFFICIENT_BALANCE,
     ACCOUNT_READY,
     BLANCE_UPDATE,
     WHITE_FINISH,

@@ -39,7 +39,6 @@ public class SheepContract : Singleton<SheepContract>
     void Start()
     {
         AccountSetup();
-        GetContract();
     }
 
     void CopyToClipboard(string s)
@@ -53,19 +52,17 @@ public class SheepContract : Singleton<SheepContract>
     public void CopyAndGoFaucet()
     {
         CopyToClipboard(from);
-        Application.OpenURL("https://faucet.testnet.tomochain.com");
     }
 
     public void AccountSetup()
     {
-        var url = "https://testnet.tomochain.com";
-
+        // var url = "https://testnet.tomochain.com";
+        var url = "https://rpc.tomochain.com";
         privateKey = PlayerPrefs.GetString("privateKey");
         if (privateKey == "")
         {
-            var ecKey = EthECKey.GenerateKey();
-            privateKey = ecKey.GetPrivateKey();
-            PlayerPrefs.SetString("privateKey", privateKey);
+            GameManager.Instance.PostNotification(EVENT_TYPE.NO_PRIVATE_KEY);
+            return;
         }
         account = new Account(privateKey);
         from = account.Address;
@@ -73,6 +70,13 @@ public class SheepContract : Singleton<SheepContract>
         GameManager.Instance.PostNotification(EVENT_TYPE.ACCOUNT_READY, this, from);
         web3 = new Web3(account, url);
         StartCoroutine(BalanceInterval());
+        GetContract();
+    }
+
+    public void SwitchAccount()
+    {
+        AccountSetup();
+        ForceUpdateBalance();
     }
 
     IEnumerator BalanceInterval()

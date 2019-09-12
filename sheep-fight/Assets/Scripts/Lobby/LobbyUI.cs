@@ -7,7 +7,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Nethereum.Web3;
+using Nethereum.Signer;
 using Nethereum.Hex.HexTypes;
+using Nethereum.Web3.Accounts;
 
 using ExitGames.Client.Photon;
 
@@ -26,15 +28,20 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     [Header("UI Elements")]
     public Button playButton;
-    public Button faucetButton;
+    public Button switchAccountButton;
     public Button quitButton;
+    public Button importButton;
+    public Button createAccButton;
+    public InputField privateKeyInput;
 
+    public GameObject cancelSwitchAccBtn;
     public GameObject lobbyPanel;
     public GameObject inRoomPanel;
+    public GameObject invalidPrivateKey;
 
     public GameObject txConfirmPanel;
     public GameObject insufficientBalance;
-    public GameObject firstTimePanel;
+    public GameObject switchAccountPanel;
 
     void Awake()
     {
@@ -46,16 +53,21 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         int isFirstTime = PlayerPrefs.GetInt("isFirstTime", 0);
         if (isFirstTime == 0)
         {
-            firstTimePanel.SetActive(true);
+            cancelSwitchAccBtn.SetActive(false);
+            switchAccountPanel.SetActive(true);
             PlayerPrefs.SetInt("isFirstTime", 1);
         }
         else
         {
-            firstTimePanel.SetActive(false);
+            switchAccountPanel.SetActive(false);
         }
+
+        invalidPrivateKey.SetActive(false);
         playButton.onClick.AddListener(PlayGame);
         quitButton.onClick.AddListener(QuitGame);
-        faucetButton.onClick.AddListener(CopyAndGoFaucet);
+        importButton.onClick.AddListener(ImportAccount);
+        createAccButton.onClick.AddListener(CreateAccount);
+        switchAccountButton.onClick.AddListener(SwitchAccount);
 
         Disable(insufficientBalance);
         StartCoroutine(SetupPlay());
@@ -63,6 +75,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
         SwitchPanel(lobbyPanel.name);
 
+        GameManager.Instance.AddListener(EVENT_TYPE.NO_PRIVATE_KEY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLANCE_UPDATE, this);
         PhotonNetwork.ConnectUsingSettings();
@@ -75,19 +88,50 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     {
         Disable(playButton.gameObject);
         yield return new WaitForSeconds(2f);
-        Enable(playButton.gameObject);
+        // Enable(playButton.gameObject);
     }
 
     #region UI Callbacks
+
+    public void CreateAccount()
+    {
+        invalidPrivateKey.SetActive(false);
+        var ecKey = EthECKey.GenerateKey();
+        var privateKey = ecKey.GetPrivateKey();
+        PlayerPrefs.SetString("privateKey", privateKey);
+        SheepContract.Instance.SwitchAccount();
+        switchAccountPanel.SetActive(false);
+    }
+
+    public void ImportAccount()
+    {
+        string privateKey = privateKeyInput.text;
+        try
+        {
+            var newAcc = new Account(privateKey);
+        }
+        catch
+        {
+            invalidPrivateKey.SetActive(true);
+            Debug.LogError("Invalid private key");
+            return;
+        }
+        invalidPrivateKey.SetActive(false);
+        PlayerPrefs.SetString("privateKey", privateKey);
+        SheepContract.Instance.SwitchAccount();
+        switchAccountPanel.SetActive(false);
+    }
+
+    public void SwitchAccount()
+    {
+        switchAccountPanel.SetActive(true);
+        cancelSwitchAccBtn.SetActive(true);
+    }
+
     public void SwitchPanel(string panelName)
     {
         lobbyPanel.SetActive(lobbyPanel.name.Equals(panelName));
         inRoomPanel.SetActive(inRoomPanel.name.Equals(panelName));
-    }
-
-    public void CopyAndGoFaucet()
-    {
-        SheepContract.Instance.CopyAndGoFaucet();
     }
 
     public void Enable(GameObject obj)
@@ -198,6 +242,9 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     {
         switch (eventType)
         {
+            case EVENT_TYPE.NO_PRIVATE_KEY:
+                SwitchAccount();
+                break;
             case EVENT_TYPE.ACCOUNT_READY:
                 SetAccount((string)param);
                 PhotonNetwork.LocalPlayer.NickName = PlayerPrefs.GetString("NickName");
@@ -210,6 +257,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
                 SetBalance(string.Format("{0:0.00} Tomo", balanceVal));
                 if (balanceVal > 1)
                 {
+                    Enable(playButton.gameObject);
                     Disable(insufficientBalance);
                 }
                 else
