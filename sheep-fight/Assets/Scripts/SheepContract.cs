@@ -49,7 +49,7 @@ public class SheepContract : Singleton<SheepContract>
         te.Copy();
     }
 
-    public void CopyAndGoFaucet()
+    public void CopyAddress()
     {
         CopyToClipboard(from);
     }

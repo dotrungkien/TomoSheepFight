@@ -32,6 +32,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     public Button quitButton;
     public Button importButton;
     public Button createAccButton;
+    public Button copyAddressButton;
     public InputField privateKeyInput;
 
     public GameObject cancelSwitchAccBtn;
@@ -68,6 +69,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         importButton.onClick.AddListener(ImportAccount);
         createAccButton.onClick.AddListener(CreateAccount);
         switchAccountButton.onClick.AddListener(SwitchAccount);
+        copyAddressButton.onClick.AddListener(SheepContract.Instance.CopyAddress);
 
         Disable(insufficientBalance);
         StartCoroutine(SetupPlay());
