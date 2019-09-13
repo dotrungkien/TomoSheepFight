@@ -61,8 +61,8 @@ public class SheepContract : Singleton<SheepContract>
 
     public void AccountSetup()
     {
-        var url = "https://testnet.tomochain.com";
-        // var url = "https://rpc.tomochain.com";
+        // var url = "https://testnet.tomochain.com";
+        var url = "https://rpc.tomochain.com";
         privateKey = PlayerPrefs.GetString("privateKey");
         if (privateKey == "")
         {

@@ -190,7 +190,6 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         Enable(txConfirmPanel);
         var tx = await SheepContract.Instance.Play(gameID);
         Disable(txConfirmPanel);
-        Debug.LogFormat("in room panel {0}", inRoomPanel);
         if (inRoomPanel != null) SwitchPanel(inRoomPanel.name);
         var subTx = tx.Substring(0, 8);
         int seed = Convert.ToInt32(subTx, 16);
