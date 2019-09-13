@@ -43,14 +43,25 @@ public class GameManager : Singleton<GameManager>, IListener
     [HideInInspector]
     public int currentSeed;
 
+    public bool contractOK = false;
+    public bool photonOK = false;
+    public bool balanceOK = false;
+
+    public bool ConnectionOK
+    {
+        get
+        {
+            return contractOK && photonOK && balanceOK;
+        }
+    }
+
     private Dictionary<EVENT_TYPE, List<IListener>> listeners = new Dictionary<EVENT_TYPE, List<IListener>>();
 
     void Start()
     {
-        wScore = MAX_SCORE;
-        bScore = MAX_SCORE;
-        AddListener(EVENT_TYPE.GAMEOVER, this);
+        ResetGame();
         currentSeed = new System.Random().Next();
+        AddListener(EVENT_TYPE.GAMEOVER, this);
     }
 
     public void ResetGame()
@@ -62,6 +73,11 @@ public class GameManager : Singleton<GameManager>, IListener
             bWeights[i] = 0;
             wWeights[i] = 0;
         }
+        wScore = MAX_SCORE;
+        bScore = MAX_SCORE;
+        contractOK = false;
+        photonOK = false;
+        balanceOK = false;
     }
 
     public Vector3 LaneVelocity(int laneIndex)

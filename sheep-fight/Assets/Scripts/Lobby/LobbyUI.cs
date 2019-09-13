@@ -33,6 +33,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     public Button importButton;
     public Button createAccButton;
     public Button copyAddressButton;
+    public Button copyPrivButton;
     public InputField privateKeyInput;
 
     public GameObject cancelSwitchAccBtn;
@@ -70,9 +71,10 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         createAccButton.onClick.AddListener(CreateAccount);
         switchAccountButton.onClick.AddListener(SwitchAccount);
         copyAddressButton.onClick.AddListener(SheepContract.Instance.CopyAddress);
+        copyPrivButton.onClick.AddListener(SheepContract.Instance.CopyPrivateKey);
 
         Disable(insufficientBalance);
-        StartCoroutine(SetupPlay());
+        Disable(playButton.gameObject);
         Disable(txConfirmPanel);
 
         SwitchPanel(lobbyPanel.name);
@@ -86,11 +88,10 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         SheepContract.Instance.ForceEndGame();
     }
 
-    IEnumerator SetupPlay()
+    private void Update()
     {
-        Disable(playButton.gameObject);
-        yield return new WaitForSeconds(2f);
-        // Enable(playButton.gameObject);
+        if (GameManager.Instance.ConnectionOK) Enable(playButton.gameObject);
+        else Disable(playButton.gameObject);
     }
 
     #region UI Callbacks
@@ -174,6 +175,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     public override void OnConnectedToMaster()
     {
         // SwitchPanel(inRoomPanel.name);
+        GameManager.Instance.photonOK = true;
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -199,6 +201,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     public override void OnLeftRoom()
     {
+        GameManager.Instance.photonOK = false;
         SwitchPanel(lobbyPanel.name);
     }
 
@@ -257,16 +260,7 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
                 decimal balanceVal = (decimal)param;
                 SetAccount(PlayerPrefs.GetString("NickName"));
                 SetBalance(string.Format("{0:0.00} Tomo", balanceVal));
-                if (balanceVal > 1)
-                {
-                    Enable(playButton.gameObject);
-                    Disable(insufficientBalance);
-                }
-                else
-                {
-                    Enable(insufficientBalance);
-                    Disable(playButton.gameObject);
-                }
+                insufficientBalance.SetActive(balanceVal <= 1);
                 break;
             default:
                 break;

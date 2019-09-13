@@ -54,6 +54,11 @@ public class SheepContract : Singleton<SheepContract>
         CopyToClipboard(from);
     }
 
+    public void CopyPrivateKey()
+    {
+        CopyToClipboard(privateKey);
+    }
+
     public void AccountSetup()
     {
         // var url = "https://testnet.tomochain.com";
@@ -66,7 +71,7 @@ public class SheepContract : Singleton<SheepContract>
         }
         account = new Account(privateKey);
         from = account.Address;
-        if (PlayerPrefs.GetString("NickName") == "") PlayerPrefs.SetString("NickName", from);
+        PlayerPrefs.SetString("NickName", from);
         GameManager.Instance.PostNotification(EVENT_TYPE.ACCOUNT_READY, this, from);
         web3 = new Web3(account, url);
         StartCoroutine(BalanceInterval());
@@ -75,6 +80,8 @@ public class SheepContract : Singleton<SheepContract>
 
     public void SwitchAccount()
     {
+        GameManager.Instance.balanceOK = false;
+        GameManager.Instance.contractOK = false;
         AccountSetup();
         ForceUpdateBalance();
     }
@@ -96,6 +103,7 @@ public class SheepContract : Singleton<SheepContract>
         {
             ethBalance = newBalance;
             decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
+            GameManager.Instance.balanceOK = (ethBalanceVal > 1);
             GameManager.Instance.PostNotification(EVENT_TYPE.BLANCE_UPDATE, this, ethBalanceVal);
         }
     }
@@ -105,6 +113,7 @@ public class SheepContract : Singleton<SheepContract>
         var newBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         ethBalance = newBalance;
         decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
+        GameManager.Instance.balanceOK = (ethBalanceVal > 1);
         GameManager.Instance.PostNotification(EVENT_TYPE.BLANCE_UPDATE, this, ethBalanceVal);
     }
 
@@ -119,6 +128,7 @@ public class SheepContract : Singleton<SheepContract>
         winGameFunction = contract.GetFunction("winGame");
         loseGameFunction = contract.GetFunction("loseGame");
         forceEndFunction = contract.GetFunction("forceEndGame");
+        GameManager.Instance.contractOK = true;
     }
 
     public async Task<bool> CheckPlaying()
