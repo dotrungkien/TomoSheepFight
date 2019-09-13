@@ -43,7 +43,6 @@ public class GameManager : Singleton<GameManager>, IListener
     [HideInInspector]
     public int currentSeed;
 
-    public bool contractOK = false;
     public bool photonOK = false;
     public bool balanceOK = false;
 
@@ -51,7 +50,7 @@ public class GameManager : Singleton<GameManager>, IListener
     {
         get
         {
-            return contractOK && photonOK && balanceOK;
+            return photonOK && balanceOK;
         }
     }
 
@@ -75,7 +74,6 @@ public class GameManager : Singleton<GameManager>, IListener
         }
         wScore = MAX_SCORE;
         bScore = MAX_SCORE;
-        contractOK = false;
         photonOK = false;
         balanceOK = false;
     }

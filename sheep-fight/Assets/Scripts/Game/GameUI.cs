@@ -133,6 +133,7 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
 
     public override void OnLeftRoom()
     {
+        GameManager.Instance.photonOK = false;
         PhotonNetwork.Disconnect();
     }
 
@@ -143,7 +144,7 @@ public class GameUI : MonoBehaviourPunCallbacks, IListener
 
     public void SendTurn(int sheepIndex, int laneIndex)
     {
-        photonView.RPC("SendTurnRPC", RpcTarget.All, sheepIndex, laneIndex);
+        if (PhotonNetwork.InRoom) photonView.RPC("SendTurnRPC", RpcTarget.All, sheepIndex, laneIndex);
     }
 
     [PunRPC]

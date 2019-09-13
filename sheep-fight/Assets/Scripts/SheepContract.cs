@@ -61,8 +61,8 @@ public class SheepContract : Singleton<SheepContract>
 
     public void AccountSetup()
     {
-        // var url = "https://testnet.tomochain.com";
-        var url = "https://rpc.tomochain.com";
+        var url = "https://testnet.tomochain.com";
+        // var url = "https://rpc.tomochain.com";
         privateKey = PlayerPrefs.GetString("privateKey");
         if (privateKey == "")
         {
@@ -81,9 +81,8 @@ public class SheepContract : Singleton<SheepContract>
     public void SwitchAccount()
     {
         GameManager.Instance.balanceOK = false;
-        GameManager.Instance.contractOK = false;
         AccountSetup();
-        ForceUpdateBalance();
+        UpdateBalance();
     }
 
     IEnumerator BalanceInterval()
@@ -97,18 +96,6 @@ public class SheepContract : Singleton<SheepContract>
     }
 
     public async Task UpdateBalance()
-    {
-        var newBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
-        if (!newBalance.Equals(ethBalance))
-        {
-            ethBalance = newBalance;
-            decimal ethBalanceVal = Web3.Convert.FromWei(ethBalance.Value);
-            GameManager.Instance.balanceOK = (ethBalanceVal > 1);
-            GameManager.Instance.PostNotification(EVENT_TYPE.BLANCE_UPDATE, this, ethBalanceVal);
-        }
-    }
-
-    public async Task ForceUpdateBalance()
     {
         var newBalance = await web3.Eth.GetBalance.SendRequestAsync(from);
         ethBalance = newBalance;
@@ -128,7 +115,6 @@ public class SheepContract : Singleton<SheepContract>
         winGameFunction = contract.GetFunction("winGame");
         loseGameFunction = contract.GetFunction("loseGame");
         forceEndFunction = contract.GetFunction("forceEndGame");
-        GameManager.Instance.contractOK = true;
     }
 
     public async Task<bool> CheckPlaying()

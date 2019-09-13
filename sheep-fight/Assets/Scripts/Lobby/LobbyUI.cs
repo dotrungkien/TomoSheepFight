@@ -77,14 +77,14 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         Disable(playButton.gameObject);
         Disable(txConfirmPanel);
 
-        SwitchPanel(lobbyPanel.name);
+        if (lobbyPanel != null) SwitchPanel(lobbyPanel.name);
 
         GameManager.Instance.AddListener(EVENT_TYPE.NO_PRIVATE_KEY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.ACCOUNT_READY, this);
         GameManager.Instance.AddListener(EVENT_TYPE.BLANCE_UPDATE, this);
         PhotonNetwork.ConnectUsingSettings();
 
-        SheepContract.Instance.ForceUpdateBalance();
+        SheepContract.Instance.UpdateBalance();
         SheepContract.Instance.ForceEndGame();
     }
 
@@ -174,7 +174,6 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
     #region PUN Callbacks
     public override void OnConnectedToMaster()
     {
-        // SwitchPanel(inRoomPanel.name);
         GameManager.Instance.photonOK = true;
     }
 
@@ -190,24 +189,25 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         gameIDText.text = gameID;
         Enable(txConfirmPanel);
         var tx = await SheepContract.Instance.Play(gameID);
+        Disable(txConfirmPanel);
+        Debug.LogFormat("in room panel {0}", inRoomPanel);
+        if (inRoomPanel != null) SwitchPanel(inRoomPanel.name);
         var subTx = tx.Substring(0, 8);
         int seed = Convert.ToInt32(subTx, 16);
         GameManager.Instance.currentSeed = seed;
         var props = new ExitGames.Client.Photon.Hashtable { { READY_PROP, true } };
-        Disable(txConfirmPanel);
-        SwitchPanel(inRoomPanel.name);
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
 
     public override void OnLeftRoom()
     {
         GameManager.Instance.photonOK = false;
-        SwitchPanel(lobbyPanel.name);
+        if (lobbyPanel != null) SwitchPanel(lobbyPanel.name);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        SwitchPanel(lobbyPanel.name);
+        if (lobbyPanel != null) SwitchPanel(lobbyPanel.name);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
