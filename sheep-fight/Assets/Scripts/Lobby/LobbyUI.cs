@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -185,20 +186,15 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
 
     public override async void OnJoinedRoom()
     {
-        string gameID = PhotonNetwork.CurrentRoom.Name;
-        gameIDText.text = gameID;
-        Enable(txConfirmPanel);
-        var tx = await SheepContract.Instance.Play(gameID);
-        Disable(txConfirmPanel);
         if (inRoomPanel != null) SwitchPanel(inRoomPanel.name);
-        var subTx = tx.Substring(0, 8);
-        int seed = Convert.ToInt32(subTx, 16);
-        GameManager.Instance.currentSeed = seed;
+        // var subTx = tx.Substring(0, 8);
+        // int seed = Convert.ToInt32(subTx, 16);
+        // GameManager.Instance.currentSeed = seed;
         var props = new ExitGames.Client.Photon.Hashtable { { READY_PROP, true } };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
 
-    public override void OnLeftRoom()
+    public async override void OnLeftRoom()
     {
         GameManager.Instance.photonOK = false;
         if (lobbyPanel != null) SwitchPanel(lobbyPanel.name);
@@ -209,20 +205,20 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
         if (lobbyPanel != null) SwitchPanel(lobbyPanel.name);
     }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    public override async void OnPlayerEnteredRoom(Player newPlayer)
     {
         // Debug.LogFormat("Entered game {0}", PhotonNetwork.CurrentRoom.PlayerCount);
-        CheckPlayersReady();
+        await CheckPlayersReady();
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    public override async void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
-        CheckPlayersReady();
+        await CheckPlayersReady();
     }
 
     #endregion
 
-    private void CheckPlayersReady()
+    private async Task CheckPlayersReady()
     {
         if (!PhotonNetwork.IsMasterClient) return;
         if (PhotonNetwork.CurrentRoom.PlayerCount < 2) return;
@@ -238,6 +234,13 @@ public class LobbyUI : MonoBehaviourPunCallbacks, IListener
                 return;
             }
         }
+        Debug.Log("Enable confirm panel");
+        Enable(txConfirmPanel);
+        string gameID = PhotonNetwork.CurrentRoom.Name;
+        gameIDText.text = gameID;
+        var tx = await SheepContract.Instance.Play(gameID);
+        Debug.Log("complete");
+        Disable(txConfirmPanel);
         PhotonNetwork.LoadLevel("Game");
     }
 

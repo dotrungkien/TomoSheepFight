@@ -92,7 +92,8 @@ public class GameController : MonoBehaviourPunCallbacks, IListener
         isReady = true;
         coolDown = 0f;
         int seed = GameManager.Instance.currentSeed;
-        rand = new System.Random(seed);
+        // rand = new System.Random(seed);
+        rand = new System.Random();
         sheeps = new List<int>();
         for (int i = 0; i < 200; i++)
         {

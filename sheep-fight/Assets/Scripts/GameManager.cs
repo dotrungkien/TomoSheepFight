@@ -41,7 +41,7 @@ public class GameManager : Singleton<GameManager>, IListener
     public int[] wWeights;
 
     [HideInInspector]
-    public int currentSeed;
+    public int currentSeed = 42;
 
     public bool photonOK = false;
     public bool balanceOK = false;

@@ -6071,6 +6071,11 @@ PrefabInstance:
         type: 3}
       propertyPath: contractAddress
       value: 
-      objectReference: {fileID: 4900000, guid: 31a48e0f567c54e6797816c7bf607538, type: 3}
+      objectReference: {fileID: 4900000, guid: 6d9b964cf5885414e904f9898792ee67, type: 3}
+    - target: {fileID: 5980315817670541264, guid: bf851b04753b54638a7bf235545d0f3d,
+        type: 3}
+      propertyPath: contractABI
+      value: 
+      objectReference: {fileID: 4900000, guid: 64affdb99d0d14c5cb3ca265c4c0b56e, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf851b04753b54638a7bf235545d0f3d, type: 3}
